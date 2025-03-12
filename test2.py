@@ -44,7 +44,7 @@ def step(steps):
     if steps > 0:
         gpio.output(DIR, 1)
         try:
-            i = 1
+            i = 0
             while(i<int(steps)):
                 i += 1
                 gpio.output(STEP, 1)
@@ -62,7 +62,7 @@ def step(steps):
         gpio.output(DIR, 0)
         steps *= -1
         try:
-            i = 1
+            i = 0
             while (i < int(steps)):
                 i += 1
                 gpio.output(STEP, 1)
