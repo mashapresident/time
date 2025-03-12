@@ -25,7 +25,7 @@ __maintainer__ = __author__
 __email__ = "support@olimex.com"
 
 
- def millis():
+def millis():
      return time.time()*1000
 
 
