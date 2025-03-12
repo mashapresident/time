@@ -16,14 +16,14 @@ def index():
 @app.route('/set_steps', methods=['POST'])
 def set_steps():
     steps_per_revolution = int(request.form['steps_per_revolution'])
-    return redirect(url_for(index))
+    return redirect(url_for('index'))
 
 
 @app.route('/calibrate', methods=['POST'])
 def calibrate():
     calibration_steps = int(request.form['calibration_steps'])
     test2.step(calibration_steps)
-    return redirect(url_for(index))
+    return redirect(url_for('index'))
 
 
 def step(steps):
