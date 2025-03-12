@@ -4,9 +4,9 @@ import time
 GPIO.setmode(GPIO.BOARD)
 
 # Визначаємо піни
-DIR = 7  # GPIO2 - Напрямок
-STEP = 5  # GPIO10 - Імпульси
-EN = 3 # GPIO2
+DIR = 6  # GPIO2 - Напрямок
+STEP = 11  # GPIO10 - Імпульси
+EN = 12 # GPIO2
 
 GPIO.cleanup()
 
