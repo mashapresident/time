@@ -40,9 +40,9 @@ gpio.setcfg(EN, gpio.OUTPUT)
 try:
     while True:
         gpio.output(STEP, 1)
-        time.time() * 1000 * 10
+        time.time() * 1000 * 1000
         gpio.output(STEP, 0)
-        time.time() * 1000 * 10
+        time.time() * 1000 * 1000
 
 except KeyboardInterrupt:
     print ("Goodbye.")
