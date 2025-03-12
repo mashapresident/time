@@ -3,8 +3,7 @@ import time
 
 GPIO.cleanup()
 
-# Використання фізичної нумерації пінів
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.LINUX)
 
 # Визначаємо піни
 DIR = "PA6"  # GPIO2 - Напрямок
