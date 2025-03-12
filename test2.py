@@ -40,9 +40,9 @@ gpio.setcfg(EN, gpio.OUTPUT)
 try:
     while True:
         gpio.output(STEP, 1)
-        time.sleep(0.001)  # Час між імпульсами (чим менше, тим швидше)
+        time.sleep(0.1)  # Час між імпульсами (чим менше, тим швидше)
         gpio.output(STEP, 0)
-        time.sleep(0.001)
+        time.sleep(0.1)
 
 except KeyboardInterrupt:
     print ("Goodbye.")
