@@ -45,11 +45,11 @@ try:
     while True:
         gpio.output(STEP, 1)
         time1=millis()
-        while (millis() - time1)<1000:
+        while (millis() - time1)<10:
             sleep(0)
         gpio.output(STEP, 0)
         time1=millis()
-        while (millis() - time1)<1000:
+        while (millis() - time1)<10:
             sleep(0)
 
 except KeyboardInterrupt:
