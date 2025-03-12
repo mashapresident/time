@@ -25,6 +25,10 @@ __maintainer__ = __author__
 __email__ = "support@olimex.com"
 
 
+ def millis():
+     return time.time()*1000
+
+
 #led = port.PA12
 
 DIR = port.PA6  # GPIO2 - Напрямок
@@ -40,9 +44,13 @@ gpio.setcfg(EN, gpio.OUTPUT)
 try:
     while True:
         gpio.output(STEP, 1)
-        time.time() * 1000 * 1000
+        time1=millis()
+        while (millis() - time1)<10:
+            sleep(0)
         gpio.output(STEP, 0)
-        time.time() * 1000 * 1000
+        time1=millis()
+        while (millis() - time1)<10:
+            sleep(0)
 
 except KeyboardInterrupt:
     print ("Goodbye.")
