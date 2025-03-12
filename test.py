@@ -1,14 +1,14 @@
 import OPi.GPIO as GPIO
 import time
 
-GPIO.cleanup()
-
-GPIO.setmode(GPIO.LINUX)
+GPIO.setmode(GPIO.BCM)
 
 # Визначаємо піни
-DIR = "PA6"  # GPIO2 - Напрямок
-STEP = "PA11"  # GPIO10 - Імпульси
-EN = "PA12" # GPIO2
+DIR = 6  # GPIO2 - Напрямок
+STEP = 11  # GPIO10 - Імпульси
+EN = 12 # GPIO2
+
+GPIO.cleanup()
 
 # Налаштування пінів
 GPIO.setup(DIR, GPIO.OUT)
