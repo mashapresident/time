@@ -10,7 +10,7 @@ global steps_per_revolution
 
 @app.route('/')
 def index():
-    return render_template('index.html', steps_per_revolution=steps_per_revolution)
+    return render_template('index.html')
 
 
 @app.route('/set_steps', methods=['POST'])
