@@ -9,13 +9,16 @@ GPIO.setmode(GPIO.BOARD)
 # Визначаємо піни
 DIR = 10  # GPIO2  (PA2) - Напрямок
 STEP = 13  # GPIO10  (PA10) - Імпульси
+EN = 2 # GPIO2
 
 # Налаштування пінів
 GPIO.setup(DIR, GPIO.OUT)
 GPIO.setup(STEP, GPIO.OUT)
+GPIO.setup(EN, GPIO.OUT)
 
 # Встановлюємо напрямок (1 - вперед, 0 - назад)
 GPIO.output(DIR, 1)
+GPIO.output(EN, 0)
 
 # Кроковий рух (200 кроків = 1 оберт, якщо 1.8°/крок)
 try:
