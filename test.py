@@ -7,9 +7,9 @@ GPIO.cleanup()
 GPIO.setmode(GPIO.BOARD)
 
 # Визначаємо піни
-DIR = 6  # GPIO2 - Напрямок
-STEP = 11  # GPIO10 - Імпульси
-EN = 12 # GPIO2
+DIR = "PA6"  # GPIO2 - Напрямок
+STEP = "PA11"  # GPIO10 - Імпульси
+EN = "PA12" # GPIO2
 
 # Налаштування пінів
 GPIO.setup(DIR, GPIO.OUT)
