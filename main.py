@@ -16,7 +16,6 @@ def index():
 @app.route('/set_steps', methods=['POST'])
 def set_steps():
     steps_per_revolution = int(request.form['steps_per_revolution'])
-    test2.step()
     return jsonify({"status": "success"})
 
 

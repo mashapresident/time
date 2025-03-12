@@ -40,9 +40,9 @@ gpio.setcfg(DIR, gpio.OUTPUT)
 gpio.setcfg(STEP, gpio.OUTPUT)
 gpio.setcfg(EN, gpio.OUTPUT)
 
-def step():
+def step(steps):
     try:
-        while True:
+        for i in steps:
             gpio.output(STEP, 1)
             time1=millis()
             while (millis() - time1)<10:
