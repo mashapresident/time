@@ -1,10 +1,11 @@
-
-
+import test2
+from test2 import *
 from flask import Flask, request, render_template, jsonify
 
 app = Flask(__name__)
 
-steps_per_revolution = 200
+global steps_per_revolution
+
 
 
 @app.route('/')
@@ -14,7 +15,6 @@ def index():
 
 @app.route('/set_steps', methods=['POST'])
 def set_steps():
-    global steps_per_revolution
     steps_per_revolution = int(request.form['steps_per_revolution'])
     return jsonify({"status": "success", "steps_per_revolution": steps_per_revolution})
 
@@ -29,8 +29,8 @@ def calibrate():
 
 
 def step(direction, steps, delay):
-    # Ваш код для переміщення двигуна
-    pass
+    test2.step()
+
 
 
 if __name__ == '__main__':

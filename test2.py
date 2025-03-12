@@ -28,7 +28,6 @@ __email__ = "support@olimex.com"
 def millis():
      return time.time()*1000
 
-
 #led = port.PA12
 
 DIR = port.PA6  # GPIO2 - Напрямок
@@ -41,16 +40,20 @@ gpio.setcfg(DIR, gpio.OUTPUT)
 gpio.setcfg(STEP, gpio.OUTPUT)
 gpio.setcfg(EN, gpio.OUTPUT)
 
-try:
-    while True:
-        gpio.output(STEP, 1)
-        time1=millis()
-        while (millis() - time1)<10:
-            pass
-        gpio.output(STEP, 0)
-        time1=millis()
-        while (millis() - time1)<10:
-            pass
+def step():
+    try:
+        while True:
+            gpio.output(STEP, 1)
+            time1=millis()
+            while (millis() - time1)<10:
+                pass
+            gpio.output(STEP, 0)
+            time1=millis()
+            while (millis() - time1)<10:
+                pass
 
-except KeyboardInterrupt:
-    print ("Goodbye.")
+    except KeyboardInterrupt:
+        print ("Goodbye.")
+
+
+

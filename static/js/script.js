@@ -24,7 +24,7 @@ function calibrate(direction) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
-            },
+            }
             body: `direction=${direction}&steps=${steps}&delay=${delay}`
         }).then(response => response.json())
         .then(data => alert('Калібрування виконано'));
