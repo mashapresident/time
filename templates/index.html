@@ -19,10 +19,11 @@
 
 
         <h2>Калібрування стрілок</h2>
-        <label for="calibration_steps">Кількість кроків для калібрування:</label>
-        <input type="number" id="calibration_steps" name="calibration_steps">
-        <button onclick="calibrate(0)">Хвилина назад</button>
-        <button onclick="calibrate(1)">Хвилина вперед</button>
+        <form id="calibate_steps" action="/calibrate", method="POST">
+            <label for="calibration_steps">Кількість кроків для калібрування:</label>
+            <input type="number" id="calibration_steps" name="calibration_steps">
+            <button type="submit">Калібрувати</button>
+        </form>>
     </div>
 </body>
 </html>

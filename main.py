@@ -17,15 +17,13 @@ def index():
 def set_steps():
     steps_per_revolution = int(request.form['steps_per_revolution'])
     test2.step()
-    return jsonify({"status": "success", "steps_per_revolution": steps_per_revolution})
+    return jsonify({"status": "success"})
 
 
 @app.route('/calibrate', methods=['POST'])
 def calibrate():
-    direction = int(request.form['direction'])
-    steps = int(request.form['steps'])
-    delay = int(request.form['delay'])
-    step(direction, steps, delay)
+    calibration_steps = int(request.form['calibration_steps'])
+    test2.step()
     return jsonify({"status": "success"})
 
 
