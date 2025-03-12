@@ -41,21 +41,41 @@ gpio.setcfg(STEP, gpio.OUTPUT)
 gpio.setcfg(EN, gpio.OUTPUT)
 
 def step(steps):
-    try:
-        i = 1
-        while(i<int(steps)):
-            i += 1
-            gpio.output(STEP, 1)
-            time1=millis()
-            while (millis() - time1)<10:
-                pass
-            gpio.output(STEP, 0)
-            time1=millis()
-            while (millis() - time1)<10:
-                pass
+    if steps > 0:
+        gpio.output(DIR, 1)
+        try:
+            i = 1
+            while(i<int(steps)):
+                i += 1
+                gpio.output(STEP, 1)
+                time1=millis()
+                while (millis() - time1)<10:
+                    pass
+                gpio.output(STEP, 0)
+                time1=millis()
+                while (millis() - time1)<10:
+                    pass
 
-    except KeyboardInterrupt:
-        print ("Goodbye.")
+        except KeyboardInterrupt:
+            print ("Goodbye.")
+    elif steps < 0:
+        gpio.output(DIR, 0)
+        steps *= -1
+        try:
+            i = 1
+            while (i < int(steps)):
+                i += 1
+                gpio.output(STEP, 1)
+                time1 = millis()
+                while (millis() - time1) < 10:
+                    pass
+                gpio.output(STEP, 0)
+                time1 = millis()
+                while (millis() - time1) < 10:
+                    pass
+
+        except KeyboardInterrupt:
+            print("Goodbye.")
 
 
 
