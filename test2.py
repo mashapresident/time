@@ -46,11 +46,11 @@ try:
         gpio.output(STEP, 1)
         time1=millis()
         while (millis() - time1)<100:
-            sleep(0)
+            pass
         gpio.output(STEP, 0)
         time1=millis()
         while (millis() - time1)<100:
-            sleep(0)
+            pass
 
 except KeyboardInterrupt:
     print ("Goodbye.")
