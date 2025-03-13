@@ -1,11 +1,12 @@
 import move_engine
+import timer
 from move_engine import *
 from flask import Flask, request, render_template, jsonify, redirect, url_for
-
+from timer import run
 app = Flask(__name__)
 
 global steps_per_revolution
-
+#global steps_per_minute = int(steps_per_revolution/60)
 
 
 @app.route('/')
@@ -33,3 +34,4 @@ def step(steps):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+    timer.run()
