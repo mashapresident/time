@@ -21,7 +21,7 @@ def run():
             current_minute = get_minute()  # Отримуємо поточну хвилину
 
             if current_minute != previous_minute:
-                move_engine.step(int(steps_per_revolution/60))  # Викликаємо функцію руху двигуна
+                move_engine.step(70)  # Викликаємо функцію руху двигуна
                 previous_minute = current_minute  # Оновлюємо значення хвилини
 
             time.sleep(1)  # Перевірка кожну секунду
