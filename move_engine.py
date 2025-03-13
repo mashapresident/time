@@ -46,9 +46,9 @@ def step(steps):
         try:
            for _ in range(int(steps)):
             gpio.output(STEP, 1)
-            time.sleep(0.002)
+            time.sleep(1)
             gpio.output(STEP, 0)
-            time.sleep(0.002)
+            time.sleep(1)
         except KeyboardInterrupt:
             print ("Goodbye.")
 
@@ -58,9 +58,9 @@ def step(steps):
         try:
             for _ in range(int(steps)):
                 gpio.output(STEP, 1)
-                time.sleep(0.002)
+                time.sleep(1)
                 gpio.output(STEP, 0)
-                time.sleep(0.002)
+                time.sleep(1)
 
         except KeyboardInterrupt:
             print("Goodbye.")
