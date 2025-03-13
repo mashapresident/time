@@ -22,7 +22,7 @@ def set_steps():
 @app.route('/calibrate', methods=['POST'])
 def calibrate():
     calibration_steps = int(request.form['calibration_steps'])
-    test2.step(calibration_steps)
+    move_engine.step(calibration_steps)
     return redirect(url_for('index'))
 
 
