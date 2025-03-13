@@ -44,35 +44,23 @@ def step(steps):
     if steps > 0:
         gpio.output(DIR, 1)
         try:
-            i = 0
-            while(i<int(steps)):
-                i += 1
-                gpio.output(STEP, 1)
-                time1=millis()
-                while (millis() - time1)<10:
-                    pass
-                gpio.output(STEP, 0)
-                time1=millis()
-                while (millis() - time1)<10:
-                    pass
-
+           for _ in range(int(steps)):
+            GPIO.output(STEP, 1)
+            time.sleep(0.002)
+            GPIO.output(STEP, 0)
+            time.sleep(0.002)
         except KeyboardInterrupt:
             print ("Goodbye.")
+
     elif steps < 0:
         gpio.output(DIR, 0)
         steps *= -1
         try:
-            i = 0
-            while (i < int(steps)):
-                i += 1
-                gpio.output(STEP, 1)
-                time1 = millis()
-                while (millis() - time1) < 10:
-                    pass
-                gpio.output(STEP, 0)
-                time1 = millis()
-                while (millis() - time1) < 10:
-                    pass
+            for _ in range(int(steps)):
+                GPIO.output(STEP, 1)
+                time.sleep(0.002)
+                GPIO.output(STEP, 0)
+                time.sleep(0.002)
 
         except KeyboardInterrupt:
             print("Goodbye.")

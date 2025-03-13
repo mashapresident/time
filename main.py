@@ -1,5 +1,5 @@
-import test2
-from test2 import *
+import move_engine
+from move_engine import *
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 
 app = Flask(__name__)
@@ -27,7 +27,7 @@ def calibrate():
 
 
 def step(steps):
-    test2.step(steps)
+    move_engine.step(steps)
 
 
 
