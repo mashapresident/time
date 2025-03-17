@@ -7,11 +7,10 @@ from quart import Quart, request, render_template, redirect, url_for
 # Припускаємо, що UPLOAD_FOLDER визначено, наприклад:
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 app = Quart(__name__)
 
-@app.route('/upload', methods=['POST'])
-async def upload_files():
+@app.route('/upload_melodiya', methods=['POST'])
+async def upload_m():
     files = await request.files
 
     # Завантаження файлу "Мелодія" з фіксованою назвою
@@ -20,11 +19,18 @@ async def upload_files():
         fixed_filename = "melodiya_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await melodiya_file.save(file_path)
-    stuk_file = files.get('stuk')
-    if stuk_file:
+
+@app.route('/upload_stuk', methods=['POST'])
+async def upload_m():
+    files = await request.files
+
+    # Завантаження файлу "Мелодія" з фіксованою назвою
+    melodiya_file = files.get('stuk')
+    if melodiya_file:
         fixed_filename = "stuk_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
-        await stuk_file.save(file_path)
+        await melodiya_file.save(file_path)
+
 
 
 @app.route('/')
