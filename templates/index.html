@@ -25,8 +25,22 @@
             <button type="submit">Калібрувати</button>
         </form>
 
-        <div id="dropContainer">Drop Here</div>
-            <input type="file" id="fileInput" />
-        </div>
+        <h2>Завантаження аудіо</h2>
+        <form id="upload_files" action="/upload" method="POST" enctype="multipart/form-data">
+          <div class="drop-container">
+            <!-- Перший блок: Мелодія -->
+            <div class="drop-item" id="melodiyaDrop">
+              <!-- При кліку на кнопку відкривається файловий вибір -->
+              <button type="button" onclick="document.getElementById('melodiyaFile').click();">Мелодія</button>
+              <input type="file" id="melodiyaFile" name="melodiya" accept="audio/*" style="display:none;">
+            </div>
+            <!-- Другий блок: Звук стуку -->
+            <div class="drop-item" id="stukSoundDrop">
+              <button type="button" onclick="document.getElementById('stukSoundFile').click();">Звук стуку</button>
+              <input type="file" id="stukSoundFile" name="stuk" accept="audio/*" style="display:none;">
+            </div>
+          </div>
+          <button type="submit">Завантажити аудіо</button>
+        </form>
 </body>
 </html>

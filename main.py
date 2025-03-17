@@ -2,9 +2,13 @@ import asyncio
 from quart import Quart, request, render_template, redirect, url_for
 import move_engine  # Повинна містити асинхронну функцію step, що не блокує event loop
 import timer        # Повинна містити асинхронну функцію run, яка використовує await asyncio.sleep(), а не time.sleep()
-
+import  os
 app = Quart(__name__)
-background_task = None  # Глобальна змінна для фонового таску
+background_task = None
+
+# Визначення шляху до папки для завантаження аудіофайлів
+UPLOAD_FOLDER = os.path.join(app.root_path, "music")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # створюємо папку, якщо не існує
 
 @app.route('/')
 async def index():
@@ -23,6 +27,22 @@ async def calibrate():
     calibration_steps = int(form_data['calibration_steps'])
     await move_engine.step(calibration_steps)  # Асинхронний виклик
     return redirect(url_for('index'))
+
+@app.route('/upload', methods=['POST'])
+async def upload_files():
+    files = await request.files
+    melodiya_file = files.get('melodiya')
+    if melodiya_file:
+        fixed_filename = "melodiya_audio.mp3"
+        file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
+        await asyncio.to_thread(melodiya_file.save, file_path)
+
+    stuk_file = files.get('stuk')
+    if stuk_file:
+        fixed_filename = "stuk_audio.mp3"
+        file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
+        await asyncio.to_thread(stuk_file.save, file_path)
+
 
 async def background_timer():
     """Фоновий таск, який періодично викликає timer.run().

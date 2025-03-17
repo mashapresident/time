@@ -1,22 +1,22 @@
-import alsaaudio
-import wave
+import vlc
 import asyncio
 
-def play_sync(filename):
-    # Відкриття WAV-файлу
-    wav = wave.open(filename, 'rb')
+async def play_sound(filename):
+    """
+    Асинхронна функція для відтворення MP3-файлу за допомогою VLC.
+    Файл завантажується за допомогою MediaPlayer, а відтворення триває до завершення.
+    """
+    instance = vlc.Instance()
+    player = instance.media_player_new()
+    media = instance.media_new(filename)
+    player.set_media(media)
 
-    # Налаштування аудіовиходу
-    output = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, device='hw:1,0')
-    output.setchannels(wav.getnchannels())
-    output.setrate(wav.getframerate())
-    output.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-    output.setperiodsize(1024)
+    player.play()
+    await asyncio.sleep(0.2)
+    while True:
+        state = player.get_state()
+        # Якщо відтворення завершилось або виникла помилка – виходимо з циклу
+        if state in (vlc.State.Ended, vlc.State.Stopped, vlc.State.Error):
+            break
+        await asyncio.sleep(0.1)
 
-    # Відтворення аудіо
-    data = wav.readframes(1024)
-    while data:
-        output.write(data)
-        data = wav.readframes(1024)
-
-    wav.close()
