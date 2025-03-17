@@ -11,13 +11,7 @@ app = Quart(__name__)
 
 @app.route('/upload', methods=['POST'])
 async def upload_files():
-    """
-    Приймає завантажені файли з полів "melodiya" та "stuk"
-    і зберігає їх у папку "music" з фіксованими назвами.
-    """
-    # У Quart request.files повертає асинхронний MultiDict
     files = await request.files
-    messages = []
 
     # Завантаження файлу "Мелодія" з фіксованою назвою
     melodiya_file = files.get('melodiya')
@@ -25,18 +19,12 @@ async def upload_files():
         fixed_filename = "melodiya_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await melodiya_file.save(file_path)
-        messages.append(f"Melody saved as {fixed_filename}")
-
-    # Завантаження файлу "Звук стуку" з фіксованою назвою
     stuk_file = files.get('stuk')
     if stuk_file:
         fixed_filename = "stuk_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await stuk_file.save(file_path)
-        messages.append(f"Knock sound saved as {fixed_filename}")
 
-    # Повертаємо словник із повідомленнями (це коректний response)
-    return {"messages": messages}
 
 @app.route('/')
 async def index():
