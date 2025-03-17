@@ -14,14 +14,15 @@ app = Quart(__name__)
 @app.route('/upload_melodiya', methods=['POST'])
 async def upload_melodiya():
     files = await request.files
-
-    # Завантаження файлу "Мелодія" з фіксованою назвою
     melodiya_file = files.get('melodiya')
     if melodiya_file:
         fixed_filename = "melodiya_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await melodiya_file.save(file_path)
-    return {"message": "Melody uploaded"}, 200
+        return redirect(url_for('index'))
+    else:
+        return {"error": "No melody sound file provided"}, 400
+
 
 @app.route('/upload_stuk', methods=['POST'])
 async def upload_stuk():
@@ -31,7 +32,11 @@ async def upload_stuk():
         fixed_filename = "stuk_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await stuk_file.save(file_path)
-    return {"message": "Knock sound uploaded"}, 200
+        # Якщо потрібно повернутися на головну сторінку, використовуйте редірект:
+        return redirect(url_for('index'))
+    else:
+        return {"error": "No knock sound file provided"}, 400
+
 
 @app.route('/')
 async def index():
