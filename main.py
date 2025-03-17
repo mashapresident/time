@@ -4,31 +4,36 @@ background_task = None
 import os
 import asyncio
 from quart import Quart, request, render_template, redirect, url_for
-# Припускаємо, що UPLOAD_FOLDER визначено, наприклад:
+
+# Визначення шляху до папки для збереження файлів "music"
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 app = Quart(__name__)
 
 @app.route('/upload_melodiya', methods=['POST'])
 async def upload_melodiya():
     files = await request.files
+
     # Завантаження файлу "Мелодія" з фіксованою назвою
     melodiya_file = files.get('melodiya')
     if melodiya_file:
         fixed_filename = "melodiya_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await melodiya_file.save(file_path)
+    return {"message": "Melody uploaded"}, 200
 
 @app.route('/upload_stuk', methods=['POST'])
 async def upload_stuk():
     files = await request.files
 
-    # Завантаження файлу "Мелодія" з фіксованою назвою
-    melodiya_file = files.get('stuk')
-    if melodiya_file:
+    # Завантаження файлу "Звук стуку" з фіксованою назвою
+    stuk_file = files.get('stuk')
+    if stuk_file:
         fixed_filename = "stuk_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
-        await melodiya_file.save(file_path)
+        await stuk_file.save(file_path)
+    return {"message": "Knock sound uploaded"}, 200
 
 @app.route('/')
 async def index():
