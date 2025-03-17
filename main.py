@@ -1,14 +1,42 @@
+
+background_task = None
+import os
 import asyncio
 from quart import Quart, request, render_template, redirect, url_for
-import move_engine  # Повинна містити асинхронну функцію step, що не блокує event loop
-import timer        # Повинна містити асинхронну функцію run, яка використовує await asyncio.sleep(), а не time.sleep()
-import  os
-app = Quart(__name__)
-background_task = None
+# Припускаємо, що UPLOAD_FOLDER визначено, наприклад:
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Визначення шляху до папки для завантаження аудіофайлів
-UPLOAD_FOLDER = os.path.join(app.root_path, "music")
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # створюємо папку, якщо не існує
+app = Quart(__name__)
+
+@app.route('/upload', methods=['POST'])
+async def upload_files():
+    """
+    Приймає завантажені файли з полів "melodiya" та "stuk"
+    і зберігає їх у папку "music" з фіксованими назвами.
+    """
+    # У Quart request.files повертає асинхронний MultiDict
+    files = await request.files
+    messages = []
+
+    # Завантаження файлу "Мелодія" з фіксованою назвою
+    melodiya_file = files.get('melodiya')
+    if melodiya_file:
+        fixed_filename = "melodiya_audio.mp3"
+        file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
+        await melodiya_file.save(file_path)
+        messages.append(f"Melody saved as {fixed_filename}")
+
+    # Завантаження файлу "Звук стуку" з фіксованою назвою
+    stuk_file = files.get('stuk')
+    if stuk_file:
+        fixed_filename = "stuk_audio.mp3"
+        file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
+        await stuk_file.save(file_path)
+        messages.append(f"Knock sound saved as {fixed_filename}")
+
+    # Повертаємо словник із повідомленнями (це коректний response)
+    return {"messages": messages}
 
 @app.route('/')
 async def index():
@@ -27,21 +55,6 @@ async def calibrate():
     calibration_steps = int(form_data['calibration_steps'])
     await move_engine.step(calibration_steps)  # Асинхронний виклик
     return redirect(url_for('index'))
-
-@app.route('/upload', methods=['POST'])
-async def upload_files():
-    files = await request.files
-    melodiya_file = files.get('melodiya')
-    if melodiya_file:
-        fixed_filename = "melodiya_audio.mp3"
-        file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
-        await asyncio.to_thread(melodiya_file.save, file_path)
-
-    stuk_file = files.get('stuk')
-    if stuk_file:
-        fixed_filename = "stuk_audio.mp3"
-        file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
-        await asyncio.to_thread(stuk_file.save, file_path)
 
 
 async def background_timer():
