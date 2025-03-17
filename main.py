@@ -10,9 +10,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app = Quart(__name__)
 
 @app.route('/upload_melodiya', methods=['POST'])
-async def upload_m():
+async def upload_melodiya():
     files = await request.files
-
     # Завантаження файлу "Мелодія" з фіксованою назвою
     melodiya_file = files.get('melodiya')
     if melodiya_file:
@@ -21,7 +20,7 @@ async def upload_m():
         await melodiya_file.save(file_path)
 
 @app.route('/upload_stuk', methods=['POST'])
-async def upload_m():
+async def upload_stuk():
     files = await request.files
 
     # Завантаження файлу "Мелодія" з фіксованою назвою
@@ -30,8 +29,6 @@ async def upload_m():
         fixed_filename = "stuk_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await melodiya_file.save(file_path)
-
-
 
 @app.route('/')
 async def index():
