@@ -30,21 +30,20 @@
     <h2>Завантаження аудіо</h2>
     <div class="audio-uploads">
       <!-- Форма для завантаження мелодії -->
-      <form id="upload_melodiya" action="/upload_melodiya" method="POST" enctype="multipart/form-data">
-        <div class="drop-item">
-          <button type="button" onclick="document.getElementById('melodiyaFile').click();">Мелодія</button>
-          <input type="file" id="melodiyaFile" name="melodiya" accept="audio/*" style="display: none;">
-        </div>
-        <button type="submit">Завантажити мелодію</button>
-      </form>
+        <form id="upload_melodiya" action="/upload_melodiya" method="POST" enctype="multipart/form-data">
+          <div class="drop-item">
+            <!-- Кнопка, яка відкриває діалог вибору файлу, але не надсилає форму -->
+            <button type="button" onclick="document.getElementById('melodiyaFile').click();">Мелодія</button>
+            <input type="file" id="melodiyaFile" name="melodiya" accept="audio/*" style="display: none;" onchange="document.getElementById('upload_melodiya').submit();">
+          </div>
+        </form>
 
       <!-- Форма для завантаження звуку стуку -->
       <form id="upload_stuk" action="/upload_stuk" method="POST" enctype="multipart/form-data">
         <div class="drop-item">
           <button type="button" onclick="document.getElementById('stukSoundFile').click();">Звук стуку</button>
-          <input type="file" id="stukSoundFile" name="stuk" accept="audio/*" style="display: none;">
+          <input type="file" id="stukSoundFile" name="stuk" accept="audio/*" style="display: none;" onchange="document.getElementById('upload_stuk').submit();">
         </div>
-        <button type="submit">Завантажити звук стуку</button>
       </form>
     </div>
 
