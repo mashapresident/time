@@ -7,7 +7,8 @@ import asyncio
 from quart import Quart, request, render_template, redirect, url_for
 import move_engine
 import timer
-
+import hypercorn.asyncio
+from hypercorn.config import Config
 app = Quart(__name__)
 
 @app.route('/')
@@ -40,8 +41,6 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.create_task(background_timer())
     # Запускаємо застосунок через ASGI-сервер, наприклад, Hypercorn
-    import hypercorn.asyncio
-    from hypercorn.config import Config
     config = Config()
-    config.bind = ["0.0.0.0:5000"]
+    config.bind = ["192.168.1.243:5000"]
     loop.run_until_complete(hypercorn.asyncio.serve(app, config))
