@@ -14,7 +14,7 @@ async def run():
         while True:
             current_minute = get_minute()  # Отримуємо поточну хвилину
             if current_minute != previous_minute:
-                if previous_minute == 3:
+                if previous_minute == 6:
                     sound.play(int(get_hour())%12)
                     print("123")
                 # Наприклад, можна додати відтворення звуку, якщо потрібно
