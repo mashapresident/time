@@ -1,11 +1,10 @@
 import asyncio
 from quart import Quart, request, render_template, redirect, url_for
-import move_engine
-import timer
-import hypercorn.asyncio
-from hypercorn.config import Config
+import move_engine  # Повинна містити асинхронну функцію step, що не блокує event loop
+import timer        # Повинна містити асинхронну функцію run, яка використовує await asyncio.sleep(), а не time.sleep()
 
 app = Quart(__name__)
+background_task = None  # Глобальна змінна для фонового таску
 
 @app.route('/')
 async def index():
@@ -15,26 +14,52 @@ async def index():
 async def set_steps():
     form_data = await request.form
     steps_per_revolution = int(form_data['steps_per_revolution'])
+    # Можна зберегти це значення за потребою
     return redirect(url_for('index'))
 
 @app.route('/calibrate', methods=['POST'])
 async def calibrate():
     form_data = await request.form
     calibration_steps = int(form_data['calibration_steps'])
-    await move_engine.step(calibration_steps)
+    await move_engine.step(calibration_steps)  # Асинхронний виклик
     return redirect(url_for('index'))
 
 async def background_timer():
-    while True:
-        await timer.run()
-        await asyncio.sleep(1)
+    """Фоновий таск, який періодично викликає timer.run().
+       Важливо: усі операції повинні бути асинхронними.
+    """
+    try:
+        while True:
+            await timer.run()       # Переконайтеся, що у timer.run() замість time.sleep використовується await asyncio.sleep
+            await asyncio.sleep(1)
+    except asyncio.CancelledError:
+        print("Background timer cancelled properly.")
+        raise
 
 @app.before_serving
 async def startup():
-    app.add_background_task(background_timer)
+    global background_task
+    background_task = asyncio.create_task(background_timer())
+
+@app.after_serving
+async def shutdown():
+    """Цей метод викликається після завершення роботи сервера для скасування фонового таску."""
+    global background_task
+    if background_task is not None:
+        background_task.cancel()
+        try:
+            await background_task
+        except asyncio.CancelledError:
+            print("Background task successfully cancelled.")
 
 if __name__ == '__main__':
+    # Запуск застосунку за допомогою ASGI-сервера Hypercorn
+    # Наприклад, для запуску:
+    # hypercorn main:app --bind 192.168.1.243:5000
+    # або запуск через код:
+    from hypercorn.config import Config
+    import hypercorn.asyncio
+
     config = Config()
-    # Прив'язуємо до конкретного IP-адреси та порту
     config.bind = ["192.168.1.243:5000"]
     asyncio.run(hypercorn.asyncio.serve(app, config))

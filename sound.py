@@ -1,8 +1,8 @@
 import alsaaudio
 import wave
+import asyncio
 
-
-async def play(filename):
+def play_sync(filename):
     # Відкриття WAV-файлу
     wav = wave.open(filename, 'rb')
 
@@ -20,4 +20,3 @@ async def play(filename):
         data = wav.readframes(1024)
 
     wav.close()
-

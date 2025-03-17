@@ -1,18 +1,12 @@
 from datetime import datetime
-
-import move_engine
-from move_engine import step
-import time
 import asyncio
-
+import move_engine  # Припускаємо, що move_engine.step - асинхронна функція
 
 def get_hour():
     return datetime.now().hour
 
-
 def get_minute():
     return datetime.now().minute
-
 
 async def run():
     previous_minute = -1  # Початкове значення для перевірки зміни хвилини
@@ -20,10 +14,16 @@ async def run():
         while True:
             current_minute = get_minute()  # Отримуємо поточну хвилину
             if current_minute != previous_minute:
-                #if previous_minute == 60:
-                    #звук
-                await move_engine.step(70)  # Викликаємо функцію руху двигуна
-                previous_minute = current_minute  # Оновлюємо значення хвилини
-            time.sleep(50)
-    except KeyboardInterrupt:
+                # Наприклад, можна додати відтворення звуку, якщо потрібно
+                await move_engine.step(70)
+                previous_minute = current_minute
+            await asyncio.sleep(3)
+    except (KeyboardInterrupt, asyncio.CancelledError):
         print("Програма зупинена користувачем.")
+
+# Якщо потрібно запустити код напряму:
+if __name__ == '__main__':
+    try:
+        asyncio.run(run())
+    except KeyboardInterrupt:
+        print("Програма завершила роботу.")
