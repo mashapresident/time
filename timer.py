@@ -1,7 +1,7 @@
 from datetime import datetime
 import asyncio
 import move_engine  # Припускаємо, що move_engine.step - асинхронна функція
-
+import sound
 def get_hour():
     return datetime.now().hour
 
@@ -14,6 +14,8 @@ async def run():
         while True:
             current_minute = get_minute()  # Отримуємо поточну хвилину
             if current_minute != previous_minute:
+                if previous_minute == 60:
+                    sound.play(int(get_hour()))
                 # Наприклад, можна додати відтворення звуку, якщо потрібно
                 await move_engine.step(70)
                 previous_minute = current_minute
