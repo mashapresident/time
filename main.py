@@ -41,8 +41,17 @@ async def set_steps():
 @app.route('/calibrate', methods=['POST'])
 async def calibrate():
     form_data = await request.form
-    calibration_steps = int(form_data['calibration_steps'])
-    await move_engine.step(calibration_steps)  # Асинхронний виклик
+    calibration_value = form_data.get('calibration_steps', '')
+    if not calibration_value.strip():
+        # Повертаємо повідомлення про помилку або перенаправляємо з повідомленням
+        return "Помилка: поле 'Кількість кроків для калібрування' не може бути пустим.", 400
+
+    try:
+        calibration_steps = int(calibration_value)
+    except ValueError:
+        return "Помилка: введене значення не є числом.", 400
+
+    await move_engine.step(calibration_steps)
     return redirect(url_for('index'))
 
 
