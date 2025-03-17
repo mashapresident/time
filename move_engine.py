@@ -35,12 +35,11 @@ STEP = port.PA11  # GPIO10 - Імпульси
 EN = port.PA12 # GPIO2
 
 gpio.init()
-#gpio.setcfg(led, gpio.OUTPUT)
 gpio.setcfg(DIR, gpio.OUTPUT)
 gpio.setcfg(STEP, gpio.OUTPUT)
 gpio.setcfg(EN, gpio.OUTPUT)
 
-def step(steps):
+async def step(steps):
     if steps > 0:
         gpio.output(DIR, 1)
         try:
