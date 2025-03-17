@@ -26,8 +26,6 @@ async def upload_melodiya():
 @app.route('/upload_stuk', methods=['POST'])
 async def upload_stuk():
     files = await request.files
-
-    # Завантаження файлу "Звук стуку" з фіксованою назвою
     stuk_file = files.get('stuk')
     if stuk_file:
         fixed_filename = "stuk_audio.mp3"
