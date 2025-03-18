@@ -27,9 +27,9 @@ def millis():
     return time.time() * 1000
 
 # Налаштовуємо GPIO-піни
-DIR = 6   # GPIO2 - Напрямок
-STEP = 11  # GPIO10 - Імпульси
-EN = 12    # GPIO2
+DIR = 2   # GPIO2 - Напрямок
+STEP = 1  # GPIO10 - Імпульси
+EN = 0   # GPIO2
 
 wiringpi.wiringPiSetup()
 wiringpi.pinMode(DIR, 1)
