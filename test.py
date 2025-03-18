@@ -15,21 +15,21 @@ def step(steps):
     Асинхронна функція для керування кроками двигуна.
     Блокуючі виклики time.sleep() замінено на await asyncio.sleep().
     """
-    try:
-        if steps > 0:
-            wiringpi.digitalWrite(DIR, 1)
-            for _ in range(int(steps)):
-                wiringpi.digitalWrite(STEP, 1)
-                time.sleep(0.01)  # асинхронна затримка
-                wiringpi.digitalWrite(STEP, 0)
-                time.sleep(0.01)
-        elif steps < 0:
-            wiringpi.digitalWrite(DIR, 0)
-            for _ in range(int(abs(steps))):
-                wiringpi.digitalWrite(STEP, 1)
-                time.sleep(0.01)
-                wiringpi.digitalWrite(STEP, 0)
-                time.sleep(0.01)
+
+    if steps > 0:
+        wiringpi.digitalWrite(DIR, 1)
+        for _ in range(int(steps)):
+            wiringpi.digitalWrite(STEP, 1)
+            time.sleep(0.01)  # асинхронна затримка
+            wiringpi.digitalWrite(STEP, 0)
+            time.sleep(0.01)
+    elif steps < 0:
+        wiringpi.digitalWrite(DIR, 0)
+        for _ in range(int(abs(steps))):
+            wiringpi.digitalWrite(STEP, 1)
+            time.sleep(0.01)
+            wiringpi.digitalWrite(STEP, 0)
+            time.sleep(0.01)
 
 # Приклад використання:
 if __name__ == '__main__':
