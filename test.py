@@ -1,5 +1,5 @@
 import wiringpi
-
+import asyncio
 # Налаштовуємо GPIO-піни
 DIR = 6   # GPIO2 - Напрямок
 STEP = 11  # GPIO10 - Імпульси
