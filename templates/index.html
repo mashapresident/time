@@ -26,6 +26,14 @@
       <button type="submit">Калібрувати</button>
     </form>
 
+        <!-- Форма для калібрування за часом -->
+    <h2>Калібрування стрілок за часом на годиннику</h2>
+    <form id="calibrate_steps_fact" action="/calibrate_fact" method="POST">
+      <label for="calibration_time">Час на годиннику (гг:хх):</label>
+      <input type="time" id="calibration_time" name="calibration_time" required>
+      <button type="submit">Калібрувати</button>
+    </form>
+
     <!-- Розділ для завантаження аудіо -->
     <h2>Завантаження аудіо</h2>
     <div class="audio-uploads">

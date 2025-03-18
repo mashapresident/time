@@ -35,7 +35,7 @@ async def play(hour):
     # Потім, для кожної ітерації, відтворюємо звук клаку.
     for i in range(1, hour + 1):
         print(f"Відтворення звуку клаку — ітерація {i}")
-        await asyncio.to_thread(play_sound, "music/stuk_audio.mp3")
+        await asyncio.to_thread(play_sound, "music/stuk_audio.wav")
 
 
 # Приклад використання:
