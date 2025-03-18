@@ -18,7 +18,6 @@ def play_sound(filename):
     time.sleep(0.2)
     while True:
         state = player.get_state()
-        # Якщо відтворення завершилося або виникла помилка – виходимо з циклу
         if state in (vlc.State.Ended, vlc.State.Stopped, vlc.State.Error):
             break
         time.sleep(0.1)
@@ -26,14 +25,20 @@ def play_sound(filename):
 
 async def play(hour):
     """
-    Асинхронна функція, яка спочатку відтворює мелодію,
-    а потім відтворює звук клаку (clock sound) hour разів.
+    Асинхронна функція, яка послідовно:
+      1. Відтворює мелодію.
+      2. Потім відтворює звук клаку hour разів.
     """
-    # Спочатку відтворюємо мелодію (фіксована назва файлу)
-    play_sound( "music/melodiya_audio.mp3")
+    # Спочатку запускаємо відтворення мелодії.
+    await asyncio.to_thread(play_sound, "music/melodiya_audio.mp3")
 
-    # Потім відтворюємо звук клаку hour разів (рахунок починається з 1)
+    # Потім, для кожної ітерації, відтворюємо звук клаку.
     for i in range(1, hour + 1):
         print(f"Відтворення звуку клаку — ітерація {i}")
-        play_sound("music/stuk_audio.mp3")
+        await asyncio.to_thread(play_sound, "music/stuk_audio.mp3")
 
+
+# Приклад використання:
+if __name__ == '__main__':
+    # Наприклад, потрібно відтворити звук клаку 3 рази після мелодії
+    asyncio.run(play(3))

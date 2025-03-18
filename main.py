@@ -1,15 +1,43 @@
+import os
+import json
+import asyncio
 import timer
 import move_engine
-background_task = None
-import os
-import asyncio
 from quart import Quart, request, render_template, redirect, url_for
 
-# Визначення шляху до папки для збереження файлів "music"
+# Визначення шляху до папки для збереження аудіофайлів "music"
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# Шлях до файлу конфігурації
+CONFIG_FILE = os.path.join(os.getcwd(), "config.json")
+
+
+def load_config():
+    """Завантажує конфігурацію з файлу. Якщо файлу немає — створює його із значенням за замовчуванням."""
+    if not os.path.exists(CONFIG_FILE):
+        config = {"steps_per_revolution": 400}
+        with open(CONFIG_FILE, "w") as f:
+            json.dump(config, f)
+        return config
+    else:
+        with open(CONFIG_FILE, "r") as f:
+            return json.load(f)
+
+
+def update_config(new_config):
+    """Оновлює конфігураційний файл."""
+    with open(CONFIG_FILE, "w") as f:
+        json.dump(new_config, f)
+
+
+# Завантажуємо конфігурацію при старті застосунку
+config_data = load_config()
+# Глобальна змінна, яку можна імпортувати в інші модулі
+steps_per_revolution = config_data.get("steps_per_revolution", 400)
+
 app = Quart(__name__)
+
 
 @app.route('/upload_melodiya', methods=['POST'])
 async def upload_melodiya():
@@ -32,7 +60,6 @@ async def upload_stuk():
         fixed_filename = "stuk_audio.mp3"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await stuk_file.save(file_path)
-        # Якщо потрібно повернутися на головну сторінку, використовуйте редірект:
         return redirect(url_for('index'))
     else:
         return {"error": "No knock sound file provided"}, 400
@@ -42,19 +69,29 @@ async def upload_stuk():
 async def index():
     return await render_template('index.html')
 
+
 @app.route('/set_steps', methods=['POST'])
 async def set_steps():
     form_data = await request.form
-    steps_per_revolution = int(form_data['steps_per_revolution'])
-    # Можна зберегти це значення за потребою
+    try:
+        new_steps = int(form_data['steps_per_revolution'])
+    except ValueError:
+        return "Invalid input", 400
+
+    # Оновлюємо глобальну змінну та конфігураційний файл
+    global steps_per_revolution, config_data
+    steps_per_revolution = new_steps
+    config_data["steps_per_revolution"] = new_steps
+    update_config(config_data)
+
     return redirect(url_for('index'))
+
 
 @app.route('/calibrate', methods=['POST'])
 async def calibrate():
     form_data = await request.form
     calibration_value = form_data.get('calibration_steps', '')
     if not calibration_value.strip():
-        # Повертаємо повідомлення про помилку або перенаправляємо з повідомленням
         return "Помилка: поле 'Кількість кроків для калібрування' не може бути пустим.", 400
 
     try:
@@ -67,25 +104,24 @@ async def calibrate():
 
 
 async def background_timer():
-    """Фоновий таск, який періодично викликає timer.run().
-       Важливо: усі операції повинні бути асинхронними.
-    """
+    """Фоновий таск, який періодично викликає timer.run()."""
     try:
         while True:
-            await timer.run()       # Переконайтеся, що у timer.run() замість time.sleep використовується await asyncio.sleep
+            await timer.run()  # Функція timer.run() має бути реалізована асинхронно
             await asyncio.sleep(1)
     except asyncio.CancelledError:
         print("Background timer cancelled properly.")
         raise
+
 
 @app.before_serving
 async def startup():
     global background_task
     background_task = asyncio.create_task(background_timer())
 
+
 @app.after_serving
 async def shutdown():
-    """Цей метод викликається після завершення роботи сервера для скасування фонового таску."""
     global background_task
     if background_task is not None:
         background_task.cancel()
@@ -94,11 +130,8 @@ async def shutdown():
         except asyncio.CancelledError:
             print("Background task successfully cancelled.")
 
+
 if __name__ == '__main__':
-    # Запуск застосунку за допомогою ASGI-сервера Hypercorn
-    # Наприклад, для запуску:
-    # hypercorn main:app --bind 192.168.1.243:5000
-    # або запуск через код:
     from hypercorn.config import Config
     import hypercorn.asyncio
 
