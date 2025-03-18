@@ -12,8 +12,7 @@ import asyncio
 if not os.getegid() == 0:
     sys.exit('Script must be run as root')
 
-from pyA20.gpio import gpio
-from pyA20.gpio import port
+import wiringpi
 
 __author__ = "Stefan Mavrodiev"
 __copyright__ = "Copyright 2014, Olimex LTD"
@@ -28,14 +27,14 @@ def millis():
     return time.time() * 1000
 
 # Налаштовуємо GPIO-піни
-DIR = port.PA6   # GPIO2 - Напрямок
-STEP = port.PA11  # GPIO10 - Імпульси
-EN = port.PA12    # GPIO2
+DIR = 6   # GPIO2 - Напрямок
+STEP = 11  # GPIO10 - Імпульси
+EN = 12    # GPIO2
 
-gpio.init()
-gpio.setcfg(DIR, gpio.OUTPUT)
-gpio.setcfg(STEP, gpio.OUTPUT)
-gpio.setcfg(EN, gpio.OUTPUT)
+wiringpi.wiringPiSetup()
+wiringpi.pinMode(DIR, 1)
+wiringpi.pinMode(STEP, 1)
+wiringpi.pinMode(EN, 1)
 
 
 async def step(steps):
@@ -45,18 +44,18 @@ async def step(steps):
     """
     try:
         if steps > 0:
-            gpio.output(DIR, 1)
+            wiringpi.digitalWrite(DIR, 1)
             for _ in range(int(steps)):
-                gpio.output(STEP, 1)
+                wiringpi.digitalWrite(STEP, 1)
                 await asyncio.sleep(0.01)  # асинхронна затримка
-                gpio.output(STEP, 0)
+                wiringpi.digitalWrite(STEP, 0)
                 await asyncio.sleep(0.01)
         elif steps < 0:
-            gpio.output(DIR, 0)
+            wiringpi.digitalWrite(DIR, 0)
             for _ in range(int(abs(steps))):
-                gpio.output(STEP, 1)
+                wiringpi.digitalWrite(STEP, 1)
                 await asyncio.sleep(0.01)
-                gpio.output(STEP, 0)
+                wiringpi.digitalWrite(STEP, 0)
                 await asyncio.sleep(0.01)
     except asyncio.CancelledError:
         print("Operation cancelled.")
