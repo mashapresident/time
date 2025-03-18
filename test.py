@@ -10,7 +10,7 @@ wiringpi.pinMode(DIR, 1)
 wiringpi.pinMode(STEP, 1)
 wiringpi.pinMode(EN, 1)
 
-def step(steps):
+async def step(steps):
     """
     Асинхронна функція для керування кроками двигуна.
     Блокуючі виклики time.sleep() замінено на await asyncio.sleep().
