@@ -16,7 +16,7 @@ async def run():
             current_minute = get_minute()  # Отримуємо поточну хвилину
             if current_minute != previous_minute:
                 if previous_minute == 6:
-                    sound.play(int(get_hour())%12)
+                    await sound.play(int(get_hour())%12)
                     print("123")
                 # Наприклад, можна додати відтворення звуку, якщо потрібно
                 await move_engine.step(1)
