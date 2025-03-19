@@ -15,7 +15,7 @@ async def run():
         while True:
             current_minute = get_minute()  # Отримуємо поточну хвилину
             if current_minute != previous_minute:
-                if previous_minute == 19:
+                if previous_minute == 59:
                     await move_engine.step(1)
                     previous_minute = current_minute
                     await sound.play(int(get_hour())%12)
