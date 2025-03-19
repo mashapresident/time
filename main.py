@@ -54,7 +54,7 @@ async def calibrate_fact():
         # Виклик функції для калібрування стрілок
         await move_engine.step(difference)
 
-        return jsonify({"message": "Калібрування успішне.", "difference_in_minutes": difference}), 200
+        return redirect(url_for('index'))
     except Exception as e:
         return jsonify({"error": f"Помилка сервера: {e}"}), 500
 
