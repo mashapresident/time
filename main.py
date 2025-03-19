@@ -20,21 +20,13 @@ app = Quart(__name__)
 async def calibrate_fact():
     """Калібрує стрілки годинника на основі часу, введеного користувачем."""
     try:
-        # Отримуємо дані форми
         form_data = await request.form
-        calibration_time_str = form_data.get('calibration_time')
-
-        # Перевіряємо, чи поле "calibration_time" передано
-        if not calibration_time_str:
-            return jsonify({"error": "Не вказано час для калібрування."}), 400
-
-        # Очікуємо формат "HH:MM"
+        calibration_time_str = str(form_data['calibration_time'])
         try:
             entered_hour, entered_minute = map(int, calibration_time_str.split(':'))
         except ValueError:
             return jsonify({"error": "Некоректний формат часу. Очікується формат HH:MM."}), 400
 
-        # Отримуємо поточний час
         now = time.localtime()
         current_hour = now.tm_hour
         current_minute = now.tm_min
@@ -104,6 +96,21 @@ async def set_steps():
 
     return redirect(url_for('index'))
 
+@app.route('/set_period', methods=['POST'])
+async def set_period():
+    form_data = await request.form
+    try:
+        new_steps = int(form_data['period_per_revolution'])
+    except ValueError:
+        return "Invalid input", 400
+
+    # Оновлюємо глобальну змінну та конфігураційний файл
+    global period, config_data
+    period = new_steps
+    config_data["period"] = new_steps
+    update_config(config_data)
+
+    return redirect(url_for('index'))
 
 @app.route('/calibrate', methods=['POST'])
 async def calibrate():
