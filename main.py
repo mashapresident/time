@@ -2,6 +2,7 @@ import os
 import json
 import asyncio
 import timer
+import time
 import move_engine
 from quart import Quart, request, render_template, redirect, url_for
 
@@ -34,6 +35,7 @@ def update_config(new_config):
 # Завантажуємо конфігурацію при старті застосунку
 config_data = load_config()
 # Глобальна змінна, яку можна імпортувати в інші модулі
+global steps_per_revolution
 steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
 app = Quart(__name__)
