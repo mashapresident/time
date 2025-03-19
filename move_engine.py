@@ -25,9 +25,7 @@ __maintainer__ = __author__
 __email__ = "support@olimex.com"
 
 
-config_data = load_configuration()
-steps_per_revolution = config_data.get("steps_per_revolution", 400)
-period = config_data.get("period", 5)
+
 
 def millis():
     return time.time() * 1000
@@ -48,8 +46,13 @@ async def step(min):
     Асинхронна функція для керування кроками двигуна.
     Блокуючі виклики time.sleep() замінено на await asyncio.sleep().
     """
+    config_data = load_configuration()
+    steps_per_revolution = config_data.get("steps_per_revolution", 400)
+    period = config_data.get("period", 5)
+
     steps = min * calculator.get_step_per_minute(steps_per_revolution)
     t = calculator.get_t(steps_per_revolution, period)
+
     try:
         if steps > 0:
             wiringpi.digitalWrite(DIR, 1)
@@ -78,7 +81,7 @@ async def calibate(steps):
             wiringpi.digitalWrite(DIR, 1)
             for _ in range(int(steps)):
                 wiringpi.digitalWrite(STEP, 1)
-                await asyncio.sleep(0.1)  # асинхронна затримка
+                await asyncio.sleep(0.1)
                 wiringpi.digitalWrite(STEP, 0)
                 await asyncio.sleep(0.1)
         elif steps < 0:

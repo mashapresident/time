@@ -116,7 +116,7 @@ async def set_period():
 async def calibrate():
     form_data = await request.form
     calibration_steps = int(form_data['calibration_steps'])
-    await move_engine.step(calibration_steps)
+    await move_engine.calibate(calibration_steps)
     return redirect(url_for('index'))
 
 
