@@ -1,11 +1,9 @@
-import os
-import json
 import asyncio
 import timer
 import time
 import move_engine
 from load_config import *
-from quart import Quart, request, render_template, redirect, url_for
+from quart import Quart, request, render_template, redirect, url_for, jsonify
 
 # Визначення шляху до папки для збереження аудіофайлів "music"
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
@@ -18,36 +16,47 @@ steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
 app = Quart(__name__)
 
+
 @app.route('/calibrate_fact', methods=['POST'])
 async def calibrate_fact():
-    @app.route('/calibrate_fact', methods=['POST'])
-    async def calibrate_fact():
+    """Калібрує стрілки годинника на основі часу, введеного користувачем."""
+    try:
         # Отримуємо дані форми
         form_data = await request.form
-        # Очікуємо, що поле називається "calibration_time" (при використанні <input type="time" name="calibration_time">)
         calibration_time_str = form_data.get('calibration_time')
+
+        # Перевіряємо, чи поле "calibration_time" передано
         if not calibration_time_str:
-            return {"error": "Не вказано час для калібрування."}, 400
+            return jsonify({"error": "Не вказано час для калібрування."}), 400
 
         # Очікуємо формат "HH:MM"
         try:
             entered_hour, entered_minute = map(int, calibration_time_str.split(':'))
         except ValueError:
-            return {"error": "Некоректний формат часу. Очікується формат HH:MM."}, 400
+            return jsonify({"error": "Некоректний формат часу. Очікується формат HH:MM."}), 400
 
-        # Отримуємо поточний час за допомогою модуля time
+        # Отримуємо поточний час
         now = time.localtime()
         current_hour = now.tm_hour
         current_minute = now.tm_min
 
-        # Перетворення часу у години та хвилини в загальну кількість хвилин від початку доби
+        # Перетворення часу в загальну кількість хвилин від початку доби
         entered_total = entered_hour * 60 + entered_minute
         current_total = current_hour * 60 + current_minute
 
-        # Різниця = введений час - поточний час
+        # Різниця у хвилинах між введеним і поточним часом
         difference = entered_total - current_total
+
+        # Валідація різниці
+        if not isinstance(difference, int):
+            return jsonify({"error": "Розрахунок часу некоректний."}), 400
+
+        # Виклик функції для калібрування стрілок
         move_engine.step(difference)
 
+        return jsonify({"message": "Калібрування успішне.", "difference_in_minutes": difference}), 200
+    except Exception as e:
+        return jsonify({"error": f"Помилка сервера: {e}"}), 500
 
 @app.route('/upload_melodiya', methods=['POST'])
 async def upload_melodiya():
