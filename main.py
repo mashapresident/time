@@ -4,6 +4,7 @@ import asyncio
 import timer
 import time
 import move_engine
+import load_config
 from quart import Quart, request, render_template, redirect, url_for
 
 # Визначення шляху до папки для збереження аудіофайлів "music"
@@ -14,28 +15,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 CONFIG_FILE = os.path.join(os.getcwd(), "config.json")
 
 
-def load_config():
-    """Завантажує конфігурацію з файлу. Якщо файлу немає — створює його із значенням за замовчуванням."""
-    if not os.path.exists(CONFIG_FILE):
-        config = {"steps_per_revolution": 400}
-        with open(CONFIG_FILE, "w") as f:
-            json.dump(config, f)
-        return config
-    else:
-        with open(CONFIG_FILE, "r") as f:
-            return json.load(f)
 
-
-def update_config(new_config):
-    """Оновлює конфігураційний файл."""
-    with open(CONFIG_FILE, "w") as f:
-        json.dump(new_config, f)
-
-
-# Завантажуємо конфігурацію при старті застосунку
-config_data = load_config()
-# Глобальна змінна, яку можна імпортувати в інші модулі
-global steps_per_revolution
 steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
 app = Quart(__name__)

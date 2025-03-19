@@ -8,7 +8,7 @@ import os
 import sys
 import time
 import asyncio
-
+import load_config
 
 if not os.getegid() == 0:
     sys.exit('Script must be run as root')
@@ -23,6 +23,9 @@ __version__ = "2.0"
 __maintainer__ = __author__
 __email__ = "support@olimex.com"
 
+
+config_data = load_config()
+steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
 def millis():
     return time.time() * 1000
