@@ -45,7 +45,7 @@ async def calibrate_fact():
         current_total = current_hour * 60 + current_minute
 
         # Різниця у хвилинах між введеним і поточним часом
-        difference = entered_total - current_total
+        difference = current_total - entered_total
 
         # Валідація різниці
         if not isinstance(difference, int):
