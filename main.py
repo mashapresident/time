@@ -76,7 +76,7 @@ async def upload_stuk():
     files = await request.files
     stuk_file = files.get('stuk')
     if stuk_file:
-        fixed_filename = "stuk_audio.mp3"
+        fixed_filename = "stuk_audio.wav"
         file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
         await stuk_file.save(file_path)
         return redirect(url_for('index'))
