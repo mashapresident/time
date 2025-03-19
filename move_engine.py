@@ -81,16 +81,16 @@ async def calibate(steps):
             wiringpi.digitalWrite(DIR, 1)
             for _ in range(int(steps)):
                 wiringpi.digitalWrite(STEP, 1)
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.01)
                 wiringpi.digitalWrite(STEP, 0)
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.01)
         elif steps < 0:
             wiringpi.digitalWrite(DIR, 0)
             for _ in range(int(abs(steps))):
                 wiringpi.digitalWrite(STEP, 1)
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.01)
                 wiringpi.digitalWrite(STEP, 0)
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.01)
     except asyncio.CancelledError:
         print("Operation cancelled.")
         raise
