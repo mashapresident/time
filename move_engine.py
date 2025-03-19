@@ -9,6 +9,8 @@ import sys
 import time
 import asyncio
 
+from main import steps_per_revolution
+
 if not os.getegid() == 0:
     sys.exit('Script must be run as root')
 
@@ -37,11 +39,12 @@ wiringpi.pinMode(STEP, 1)
 wiringpi.pinMode(EN, 1)
 
 
-async def step(steps):
+async def step(min):
     """
     Асинхронна функція для керування кроками двигуна.
     Блокуючі виклики time.sleep() замінено на await asyncio.sleep().
     """
+    steps = int(min * (steps_per_revolution/60))
     try:
         if steps > 0:
             wiringpi.digitalWrite(DIR, 1)
