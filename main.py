@@ -4,7 +4,7 @@ import asyncio
 import timer
 import time
 import move_engine
-import load_config
+from load_config import *
 from quart import Quart, request, render_template, redirect, url_for
 
 # Визначення шляху до папки для збереження аудіофайлів "music"
