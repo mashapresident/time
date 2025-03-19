@@ -43,7 +43,7 @@ async def calibrate_fact():
             return jsonify({"error": "Розрахунок часу некоректний."}), 400
 
         # Виклик функції для калібрування стрілок
-        await move_engine.step(difference)
+        await move_engine.calibate(difference)
 
         return redirect(url_for('index'))
     except Exception as e:
