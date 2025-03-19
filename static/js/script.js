@@ -9,4 +9,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+    fetch('../static/config.json')
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("Failed to fetch JSON file");
+        }
+        return response.json();
+    })
+    .then(function (data) {
+        const stepsPerRevolution = get_rev(data);
+        const periodPerRevolution = get_period(data);
+
+        console.log("Steps per revolution:", stepsPerRevolution);
+        console.log("Period per revolution:", periodPerRevolution);
+
+        document.getElementById('steps_per_revolution').placeholder = stepsPerRevolution || "Немає даних";
+        document.getElementById('period_per_revolution').placeholder = periodPerRevolution || "Немає даних";
+    })
+    .catch(function (err) {
+        console.error('Error fetching or processing data:', err);
+    });
 
