@@ -24,15 +24,7 @@ def play_sound(filename):
 
 
 async def play(hour):
-    """
-    Асинхронна функція, яка послідовно:
-      1. Відтворює мелодію.
-      2. Потім відтворює звук клаку hour разів.
-    """
-    # Спочатку запускаємо відтворення мелодії.
-    await asyncio.to_thread(play_sound, "music/melodiya_audio.mp3")
-
-    # Потім, для кожної ітерації, відтворюємо звук клаку.
+    await asyncio.to_thread(play_sound, "music/melodiya.mp3")
     for i in range(1, hour + 1):
         print(f"Відтворення звуку клаку — ітерація {i}")
         await asyncio.to_thread(play_sound, "music/stuk_audio.wav")
