@@ -71,3 +71,25 @@ async def step(min):
     except Exception as e:
         print("An error occurred:", e)
 
+
+async def calibate(steps):
+    try:
+        if steps > 0:
+            wiringpi.digitalWrite(DIR, 1)
+            for _ in range(int(steps)):
+                wiringpi.digitalWrite(STEP, 1)
+                await asyncio.sleep(0.1)  # асинхронна затримка
+                wiringpi.digitalWrite(STEP, 0)
+                await asyncio.sleep(0.1)
+        elif steps < 0:
+            wiringpi.digitalWrite(DIR, 0)
+            for _ in range(int(abs(steps))):
+                wiringpi.digitalWrite(STEP, 1)
+                await asyncio.sleep(0.1)
+                wiringpi.digitalWrite(STEP, 0)
+                await asyncio.sleep(0.1)
+    except asyncio.CancelledError:
+        print("Operation cancelled.")
+        raise
+    except Exception as e:
+        print("An error occurred:", e)

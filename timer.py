@@ -2,6 +2,7 @@ from datetime import datetime
 import asyncio
 import move_engine  # Припускаємо, що move_engine.step - асинхронна функція
 import sound
+
 def get_hour():
     return datetime.now().hour
 
@@ -18,7 +19,7 @@ async def run():
                     sound.play(int(get_hour())%12)
                     print("123")
                 # Наприклад, можна додати відтворення звуку, якщо потрібно
-                await move_engine.step(70)
+                await move_engine.step(1)
                 previous_minute = current_minute
             await asyncio.sleep(3)
     except (KeyboardInterrupt, asyncio.CancelledError):
