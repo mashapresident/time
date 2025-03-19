@@ -5,7 +5,7 @@ UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Шлях до файлу конфігурації
-CONFIG_FILE = os.path.join(os.getcwd(), "config.json")
+CONFIG_FILE = os.path.join(os.getcwd(), "static/config.json")
 
 
 def load_configuration():
