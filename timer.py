@@ -15,12 +15,10 @@ async def run():
         while True:
             current_minute = get_minute()  # Отримуємо поточну хвилину
             if current_minute != previous_minute:
-                if previous_minute == 16:
+                if previous_minute == 19:
+                    await move_engine.step(1)
+                    previous_minute = current_minute
                     await sound.play(int(get_hour())%12)
-                    print("123")
-                # Наприклад, можна додати відтворення звуку, якщо потрібно
-                await move_engine.step(1)
-                previous_minute = current_minute
             await asyncio.sleep(3)
     except (KeyboardInterrupt, asyncio.CancelledError):
         print("Програма зупинена користувачем.")
