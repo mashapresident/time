@@ -49,7 +49,7 @@ async def step(min):
     Блокуючі виклики time.sleep() замінено на await asyncio.sleep().
     """
     steps = min * calculator.get_step_per_minute(steps_per_revolution)
-    t = calculator.get_t(calculator.get_step_per_minute(steps_per_revolution), period)
+    t = calculator.get_t(steps_per_revolution, period)
     try:
         if steps > 0:
             wiringpi.digitalWrite(DIR, 1)
