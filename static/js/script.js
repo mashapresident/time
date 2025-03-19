@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-    fetch('../static/config.json')
+    fetch('/static/config.json')
     .then(function (response) {
         if (!response.ok) {
             throw new Error("Failed to fetch JSON file");
