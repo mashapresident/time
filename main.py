@@ -52,7 +52,7 @@ async def calibrate_fact():
             return jsonify({"error": "Розрахунок часу некоректний."}), 400
 
         # Виклик функції для калібрування стрілок
-        move_engine.step(difference)
+        await move_engine.step(difference)
 
         return jsonify({"message": "Калібрування успішне.", "difference_in_minutes": difference}), 200
     except Exception as e:
