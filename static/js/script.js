@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let stepsValue = parseInt(stepsInput.value, 10);
 
         if (isNaN(stepsValue) || stepsValue < 0) {
-            alert("Кількість кроків на оберт повинна бути невід’ємним числом!");
+            alert("Кількість кроків на оберт повинна бути додатнім числом!");
             event.preventDefault();
         }
     });
@@ -12,10 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("set_period").addEventListener("submit", function (event) {
-        let periodInput = document.getElementById("period_per_revolution"); // Corrected variable name
+        let periodInput = document.getElementById("period_per_revolution");
         let periodValue = parseInt(periodInput.value, 10);
 
-        if (isNaN(periodValue) || periodValue <= 0) {
+        if (isNaN(periodValue) || periodValue < 0) {
             alert("Час проходу на хвилину повинен бути додатнім числом!");
             event.preventDefault();
         }
