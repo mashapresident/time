@@ -1,3 +1,4 @@
 {
-    "steps_per_revolution": 400
+    "steps_per_revolution": 400,
+    "period" : 5
 }

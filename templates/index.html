@@ -8,13 +8,17 @@
   <title>Stepper Motor Control</title>
 </head>
 <body>
+
+config_data = load_configuration()
+steps_per_revolution = config_data.get("steps_per_revolution", 400)
+period = config_data.get("period", 5)
+
   <div class="container">
     <h1>Stepper Motor Control</h1>
-
     <!-- Форма для вводу кількості кроків -->
     <form id="set_steps" action="/set_steps" method="POST">
       <label for="steps_per_revolution">Кількість кроків на оберт:</label>
-      <input type="number" id="steps_per_revolution" name="steps_per_revolution" required>
+      <input type="number" placeholder={0} value={steps_per_revolution} id="steps_per_revolution" name="steps_per_revolution" required >
       <button type="submit">Ввести</button>
     </form>
 
