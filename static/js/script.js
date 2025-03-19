@@ -12,11 +12,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("set_period").addEventListener("submit", function (event) {
-        let stepsInput = document.getElementById("period_per_revolution");
-        let stepsValue = parseInt(stepsInput.value, 10);
+        let periodInput = document.getElementById("period_per_revolution"); // Corrected variable name
+        let periodValue = parseInt(periodInput.value, 10);
 
-        if (isNaN(stepsValue) || stepsValue <= 0) {
-            alert("Кількість кроків на оберт повинна бути додатнім числом!");
+        if (isNaN(periodValue) || periodValue <= 0) {
+            alert("Час проходу на хвилину повинен бути додатнім числом!");
             event.preventDefault();
         }
     });
