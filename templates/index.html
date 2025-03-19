@@ -49,7 +49,7 @@
     <!-- Форма для вводу кількості кроків -->
     <form id="set_steps" action="/set_steps" method="POST">
       <label for="steps_per_revolution">Кількість кроків на оберт:</label>
-      <input type="number" placeholder=${steps_per_revolution} id="steps_per_revolution" name="steps_per_revolution" required >
+      <input id="steps_per_revolution" name="steps_per_revolution" placeholder=${get_rev} required type="number">
       <button type="submit">Ввести</button>
     </form>
 
