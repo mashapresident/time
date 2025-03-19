@@ -50,12 +50,6 @@ async def step(min):
     """
     steps = min * calculator.get_step_per_minute(steps_per_revolution)
     t = calculator.get_t(calculator.get_step_per_minute(steps_per_revolution), period)
-    print(steps_per_revolution)
-    print(calculator.get_step_per_minute(steps_per_revolution))
-    print(period)
-    print(min)
-    print(steps)
-
     try:
         if steps > 0:
             wiringpi.digitalWrite(DIR, 1)
