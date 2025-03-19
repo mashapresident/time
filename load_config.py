@@ -8,7 +8,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 CONFIG_FILE = os.path.join(os.getcwd(), "config.json")
 
 
-def load_config():
+def load_configuration():
     """Завантажує конфігурацію з файлу. Якщо файлу немає — створює його із значенням за замовчуванням."""
     try:
         if not os.path.exists(CONFIG_FILE):
