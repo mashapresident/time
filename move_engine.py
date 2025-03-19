@@ -24,7 +24,7 @@ __maintainer__ = __author__
 __email__ = "support@olimex.com"
 
 
-config_data = load_config()
+config_data = load_config
 steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
 def millis():
