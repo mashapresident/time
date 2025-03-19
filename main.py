@@ -1,9 +1,12 @@
 import asyncio
+
+import load_config
 import timer
 import time
 import move_engine
 from load_config import *
 from quart import Quart, request, render_template, redirect, url_for, jsonify
+from load_config import *
 
 # Визначення шляху до папки для збереження аудіофайлів "music"
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
@@ -77,7 +80,8 @@ async def upload_stuk():
 
 @app.route('/')
 async def index():
-    return await render_template('index.html')
+    steps_per_revolution = load_config.load_configuration()
+    return await render_template('index.html', stp=steps_per_revolution)
 
 
 @app.route('/set_steps', methods=['POST'])
