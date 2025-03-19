@@ -22,6 +22,13 @@ period = config_data.get("period", 5)
       <button type="submit">Ввести</button>
     </form>
 
+    <form id="set_period" action="/set_period" method="POST">
+      <label for="period_per_revolution">Час проходу на хвилину(с)</label>
+      <input type="number" placeholder="${period}" id="period_per_revolution" name="period_per_revolution" required >
+      <button type="submit">Ввести</button>
+    </form>
+
+
     <!-- Форма для калібрування -->
     <h2>Калібрування стрілок</h2>
     <form id="calibrate_steps" action="/calibrate" method="POST">
