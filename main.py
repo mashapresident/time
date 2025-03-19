@@ -16,6 +16,20 @@ steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
 app = Quart(__name__)
 
+@app.route('/calibrate', methods=['POST'])
+async def calibrate():
+    form_data = await request.form
+    calibration_value = form_data.get('calibration_steps', '')
+    if not calibration_value.strip():
+        return "Помилка: поле 'Кількість кроків для калібрування' не може бути пустим.", 400
+
+    try:
+        calibration_steps = int(calibration_value)
+    except ValueError:
+        return "Помилка: введене значення не є числом.", 400
+
+    await move_engine.step(calibration_steps)
+    return redirect(url_for('index'))
 
 @app.route('/calibrate_fact', methods=['POST'])
 async def calibrate_fact():
