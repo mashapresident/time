@@ -80,8 +80,10 @@ async def upload_stuk():
 
 @app.route('/')
 async def index():
-    steps_per_revolution = load_config.load_configuration()
-    return await render_template('index.html', stp=steps_per_revolution)
+    data = load_config.load_configuration()
+    steps_per_revolution = data['steps_per_revolution']
+    period = data['period']
+    return await render_template('index.html', stp=steps_per_revolution, period=period)
 
 
 @app.route('/set_steps', methods=['POST'])
