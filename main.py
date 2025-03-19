@@ -13,9 +13,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Шлях до файлу конфігурації
 CONFIG_FILE = os.path.join(os.getcwd(), "config.json")
-
-
-
 steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
 app = Quart(__name__)

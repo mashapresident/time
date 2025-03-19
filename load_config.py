@@ -10,15 +10,18 @@ CONFIG_FILE = os.path.join(os.getcwd(), "config.json")
 
 def load_config():
     """Завантажує конфігурацію з файлу. Якщо файлу немає — створює його із значенням за замовчуванням."""
-    if not os.path.exists(CONFIG_FILE):
-        config = {"steps_per_revolution": 400}
-        with open(CONFIG_FILE, "w") as f:
-            json.dump(config, f)
-        return config
-    else:
-        with open(CONFIG_FILE, "r") as f:
-            return json.load(f)
-
+    try:
+        if not os.path.exists(CONFIG_FILE):
+            config = {"steps_per_revolution": 400}
+            with open(CONFIG_FILE, "w") as f:
+                json.dump(config, f)
+            return config
+        else:
+            with open(CONFIG_FILE, "r") as f:
+                return json.load(f)
+    except (IOError, json.JSONDecodeError) as e:
+        print(f"Error loading configuration: {e}")
+        return {"steps_per_revolution": 400}
 
 def update_config(new_config):
     """Оновлює конфігураційний файл."""
