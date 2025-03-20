@@ -32,8 +32,8 @@ def millis():
 
 # Налаштовуємо GPIO-піни
 DIR = 1   # GPIO2 - Напрямок
-STEP = 2  # GPIO10 - Імпульси
-EN = 0   # GPIO2
+STEP = 0  # GPIO10 - Імпульси
+EN = 2   # GPIO2
 
 wiringpi.wiringPiSetup()
 wiringpi.pinMode(DIR, 1)
