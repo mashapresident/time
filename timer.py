@@ -15,8 +15,8 @@ async def run():
         while True:
             current_minute = get_minute()
             if current_minute != previous_minute:
+                await step(1)
                 if previous_minute == 59:
-                    await step(1)
                     previous_minute = current_minute
                     await sound.play(int(get_hour())%12)
             await asyncio.sleep(3)
