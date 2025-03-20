@@ -1,6 +1,6 @@
 from datetime import datetime
 import asyncio
-from move_engine import *
+import move_engine
 import sound
 
 def get_hour():
@@ -15,7 +15,7 @@ async def run():
         while True:
             current_minute = get_minute()
             if current_minute != previous_minute:
-                await step(1)
+                await move_engine.step(1)
                 if previous_minute == 59:
                     previous_minute = current_minute
                     await sound.play(int(get_hour())%12)
