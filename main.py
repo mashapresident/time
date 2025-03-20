@@ -130,7 +130,7 @@ async def background_timer():
     """Фоновий таск, який періодично викликає timer.run()."""
     try:
         while True:
-            await timer.run()  # Функція timer.run() має бути реалізована асинхронно
+            await timer.run()
             await asyncio.sleep(1)
     except asyncio.CancelledError:
         print("Background timer cancelled properly.")

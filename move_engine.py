@@ -58,7 +58,7 @@ async def step(min):
             wiringpi.digitalWrite(DIR, 1)
             for _ in range(int(steps)):
                 wiringpi.digitalWrite(STEP, 1)
-                await asyncio.sleep(t)  # асинхронна затримка
+                await asyncio.sleep(t)
                 wiringpi.digitalWrite(STEP, 0)
                 await asyncio.sleep(t)
         elif steps < 0:
