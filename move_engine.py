@@ -57,9 +57,9 @@ async def step(min):
         wiringpi.digitalWrite(DIR, 1)
         for _ in range(int(steps)):
             wiringpi.digitalWrite(STEP, 1)
-            await asyncio.sleep(t)
+            await asyncio.sleep(0.01)
             wiringpi.digitalWrite(STEP, 0)
-            await asyncio.sleep(t)
+            await asyncio.sleep(0.01)
             print("крок зроблено")
     except asyncio.CancelledError:
         print("Operation cancelled.")

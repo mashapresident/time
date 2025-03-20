@@ -1,6 +1,6 @@
 from datetime import datetime
 import asyncio
-import move_engine  # Припускаємо, що move_engine.step - асинхронна функція
+from move_engine import *
 import sound
 
 def get_hour():
@@ -10,13 +10,13 @@ def get_minute():
     return datetime.now().minute
 
 async def run():
-    previous_minute = -1  # Початкове значення для перевірки зміни хвилини
+    previous_minute = -1
     try:
         while True:
-            current_minute = get_minute()  # Отримуємо поточну хвилину
+            current_minute = get_minute()
             if current_minute != previous_minute:
                 if previous_minute == 59:
-                    await move_engine.step(1)
+                    await step(1)
                     previous_minute = current_minute
                     await sound.play(int(get_hour())%12)
             await asyncio.sleep(3)
