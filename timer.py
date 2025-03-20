@@ -19,6 +19,7 @@ async def run():
                 if previous_minute == 59:
                     await sound.play(int(get_hour())%12)
                 previous_minute = current_minute
+            await asyncio.sleep(0.5)
     except (KeyboardInterrupt, asyncio.CancelledError):
         print("Програма зупинена користувачем.")
 
