@@ -153,6 +153,12 @@ async def shutdown():
         except asyncio.CancelledError:
             print("Background task successfully cancelled.")
 
+@app.route('/add_record', methods=['POST'])
+async def add_record():
+    form_data = await request.form
+    repeat_type = str(form_data[''])
+    return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     from hypercorn.config import Config

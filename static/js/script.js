@@ -42,3 +42,42 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Error fetching or processing data:', err);
     });
 
+//function load_records
+
+document.getElementById('add_record').onclick = function() {
+    window.location.href = "add_record.html";
+}
+document.getElementById('back_to_main_page').onclick = function() {
+    window.location.href = "index.html";
+}
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("modal");
+    const closeButton = document.querySelector(".close");
+    const nextButton = document.getElementById("next_button");
+    const repeatSelect = document.getElementById("repeat");
+    const specificDateInput = document.getElementById("specific_date");
+    const weekDaySelect = document.getElementById("week_day");
+
+    nextButton.addEventListener("click", () => {
+        switch (repeatSelect.value) {
+            case "weekly":
+                specificDateInput.classList.add("hidden");
+                weekDaySelect.classList.remove("hidden");
+                break;
+            default:
+                weekDaySelect.classList.add("hidden");
+                specificDateInput.classList.remove("hidden");
+        }
+
+        modal.style.display = "block";
+    });
+
+    closeButton.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    document.getElementById("confirm_button").addEventListener("click", () => {
+        modal.style.display = "none";
+        alert("Подія успішно збережена!");
+    });
+});

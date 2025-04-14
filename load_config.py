@@ -1,7 +1,7 @@
 import os
 import json
 # Визначення шляху до папки для збереження аудіофайлів "music"
-UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "music/files")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Шлях до файлу конфігурації

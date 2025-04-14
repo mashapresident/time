@@ -27,10 +27,10 @@ def play_sound(filename):
 
 async def play(hour):
     try:
-        await asyncio.to_thread(play_sound, "music/melodiya.mp3")
+        await asyncio.to_thread(play_sound, "music/files/melodiya.mp3")
         for i in range(1, hour + 1):
             print(f"Відтворення звуку клаку — ітерація {i}")
-            await asyncio.to_thread(play_sound, "music/stuk_audio.wav")
+            await asyncio.to_thread(play_sound, "music/files/stuk_audio.wav")
             await asyncio.sleep(0.2)
     except Exception as e:
         print(f"An error occurred: {e}")
