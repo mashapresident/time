@@ -45,10 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
 //function load_records
 
 document.getElementById('add_record').onclick = function() {
-    window.location.href = "templates/add_record.html";
+    window.location.href = "add_record.html";
 }
 document.getElementById('back_to_main_page').onclick = function() {
-    window.location.href = "templates/index.html";
+    window.location.href = "index.html";
 }
 document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("modal");
