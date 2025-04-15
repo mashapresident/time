@@ -3,7 +3,7 @@ import asyncio
 import load_config
 import timer
 import time
-import move_engine
+#import move_engine
 from load_config import *
 from quart import Quart, request, render_template, redirect, url_for, jsonify
 from load_config import *
@@ -46,7 +46,7 @@ async def calibrate_fact():
             return jsonify({"error": "Розрахунок часу некоректний."}), 400
 
         # Виклик функції для калібрування стрілок
-        await move_engine.fact_calibate(difference)
+     #   await move_engine.fact_calibate(difference)
 
         return redirect(url_for('index'))
     except Exception as e:
@@ -122,7 +122,7 @@ async def set_period():
 async def calibrate():
     form_data = await request.form
     calibration_steps = int(form_data['calibration_steps'])
-    await move_engine.calibate(calibration_steps)
+    #await move_engine.calibate(calibration_steps)
     return redirect(url_for('index'))
 
 
