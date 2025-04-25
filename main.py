@@ -1,81 +1,16 @@
 import asyncio
-
 import load_config
 import timer
 import time
-#import move_engine
-from load_config import *
 from quart import Quart, request, render_template, redirect, url_for, jsonify
 from load_config import *
-
+JSON_FILE = 'music/dictionary.json'
 # Визначення шляху до папки для збереження аудіофайлів "music"
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "music")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-# Шлях до файлу конфігурації
-CONFIG_FILE = os.path.join(os.getcwd(), "config.json")
 config_data = load_configuration()
-steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
 app = Quart(__name__)
-
-@app.route('/calibrate_fact', methods=['POST'])
-async def calibrate_fact():
-    """Калібрує стрілки годинника на основі часу, введеного користувачем."""
-    try:
-        form_data = await request.form
-        calibration_time_str = str(form_data['calibration_time'])
-        try:
-            entered_hour, entered_minute = map(int, calibration_time_str.split(':'))
-        except ValueError:
-            return jsonify({"error": "Некоректний формат часу. Очікується формат HH:MM."}), 400
-
-        now = time.localtime()
-        current_hour = now.tm_hour
-        current_minute = now.tm_min
-
-        # Перетворення часу в загальну кількість хвилин від початку доби
-        entered_total = entered_hour * 60 + entered_minute
-        current_total = current_hour * 60 + current_minute
-
-        # Різниця у хвилинах між введеним і поточним часом
-        difference = current_total - entered_total
-
-        # Валідація різниці
-        if not isinstance(difference, int):
-            return jsonify({"error": "Розрахунок часу некоректний."}), 400
-
-        # Виклик функції для калібрування стрілок
-     #   await move_engine.fact_calibate(difference)
-
-        return redirect(url_for('index'))
-    except Exception as e:
-        return jsonify({"error": f"Помилка сервера: {e}"}), 500
-
-@app.route('/upload_melodiya', methods=['POST'])
-async def upload_melodiya():
-    files = await request.files
-    melodiya_file = files.get('melodiya')
-    if melodiya_file:
-        fixed_filename = "melodiya_audio.mp3"
-        file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
-        await melodiya_file.save(file_path)
-        return redirect(url_for('index'))
-    else:
-        return {"error": "No melody sound file provided"}, 400
-
-
-@app.route('/upload_stuk', methods=['POST'])
-async def upload_stuk():
-    files = await request.files
-    stuk_file = files.get('stuk')
-    if stuk_file:
-        fixed_filename = "stuk_audio.wav"
-        file_path = os.path.join(UPLOAD_FOLDER, fixed_filename)
-        await stuk_file.save(file_path)
-        return redirect(url_for('index'))
-    else:
-        return {"error": "No knock sound file provided"}, 400
 
 
 @app.route('/')
@@ -86,44 +21,10 @@ async def index():
     return await render_template('index.html', stp=steps_per_revolution, period=period)
 
 
-@app.route('/set_steps', methods=['POST'])
-async def set_steps():
-    form_data = await request.form
-    try:
-        new_steps = int(form_data['steps_per_revolution'])
-    except ValueError:
-        return "Invalid input", 400
+@app.route('/add_record')
+async def add_record():
+    return await render_template('add_record.html')
 
-    # Оновлюємо глобальну змінну та конфігураційний файл
-    global steps_per_revolution, config_data
-    steps_per_revolution = new_steps
-    config_data["steps_per_revolution"] = new_steps
-    update_config(config_data)
-
-    return redirect(url_for('index'))
-
-@app.route('/set_period', methods=['POST'])
-async def set_period():
-    form_data = await request.form
-    try:
-        new_steps = int(form_data['period_per_revolution'])
-    except ValueError:
-        return "Invalid input", 400
-
-    # Оновлюємо глобальну змінну та конфігураційний файл
-    global period, config_data
-    period = new_steps
-    config_data["period"] = new_steps
-    update_config(config_data)
-
-    return redirect(url_for('index'))
-
-@app.route('/calibrate', methods=['POST'])
-async def calibrate():
-    form_data = await request.form
-    calibration_steps = int(form_data['calibration_steps'])
-    #await move_engine.calibate(calibration_steps)
-    return redirect(url_for('index'))
 
 
 async def background_timer():
@@ -153,12 +54,27 @@ async def shutdown():
         except asyncio.CancelledError:
             print("Background task successfully cancelled.")
 
-@app.route('/add_record', methods=['POST'])
-async def add_record():
-    form_data = await request.form
-    repeat_type = str(form_data[''])
-    return redirect(url_for('index'))
 
+
+
+@app.route('/save_event', methods=['POST'])
+async def save_event():
+    new_event = request.json
+    if not new_event:
+        return jsonify({"error": "Invalid data"}), 400
+
+    try:
+        with open(JSON_FILE, 'r') as file:
+            events = json.load(file)
+    except FileNotFoundError:
+        events = []
+
+    events.append(new_event)
+
+    with open(JSON_FILE, 'w') as file:
+        json.dump(events, file, indent=4)
+
+    return jsonify({"message": "Event saved successfully"}), 200
 
 if __name__ == '__main__':
     from hypercorn.config import Config

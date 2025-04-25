@@ -1,50 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
-    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-    <title>Adding Custom Event</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <script src="{{ url_for('static', filename='js/add_record.js') }}" defer></script>
+    <title>Додати подію</title>
 </head>
 <body>
-    <header>
-        <button id="back_to_main_page">Назад</button>
-    </header>
+    <div class="container">
+        <h1>Додати нову подію</h1>
+        <form id="add_event_form">
+            <label for="event_name">Назва події:</label>
+            <input type="text" id="event_name" name="name" required>
 
-    <main>
-        <h1>Додати подію</h1>
-        <form id="event_form">
-            <label for="event_name">Назва події</label>
-            <input type="text" id="event_name" name="event_name" required>
-
-            <label for="repeat">Повторення</label>
-            <select id="repeat" name="repeat">
+            <label for="repeat">Повторення:</label>
+            <select id="repeat" name="repeat" onchange="updateFormFields()">
                 <option value="daily">Щодня</option>
                 <option value="weekly">Щотижня</option>
-                <option value="yearly">Щорічно</option>
-                <option value="none">Унікальна подія</option>
+                <option value="one-time">Один раз</option>
             </select>
 
-            <div class="drop-item">
-                <button type="button" onclick="document.getElementById('melodiyaFile').click();">Звук</button>
-                <input type="file" id="melodiyaFile" name="custom_melody" accept="audio/*" style="display: none;">
+            <!-- Поле для часу -->
+            <div id="time_field">
+                <label for="event_time">Час (24 години):</label>
+                <input type="time" id="event_time" name="time" required>
             </div>
 
-            <button type="button" id="next_button">Далі</button>
-        </form>
-    </main>
-
-
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="modal_body">
-                <label for="specific_date">Оберіть дату:</label>
-                <input type="date" id="specific_date">
-
-                <label for="week_day" class="hidden">Оберіть день тижня:</label>
-                <select id="week_day" class="hidden">
+            <!-- Поле для вибору дня тижня -->
+            <div id="weekday_field" class="hidden">
+                <label for="weekday">День тижня:</label>
+                <select id="weekday" name="weekday">
                     <option value="monday">Понеділок</option>
                     <option value="tuesday">Вівторок</option>
                     <option value="wednesday">Середа</option>
@@ -54,8 +40,16 @@
                     <option value="sunday">Неділя</option>
                 </select>
             </div>
-            <button id="confirm_button">Підтвердити</button>
-        </div>
+
+            <!-- Поле для вибору дати -->
+            <div id="date_field" class="hidden">
+                <label for="event_date">Дата:</label>
+                <input type="date" id="event_date" name="date">
+            </div>
+
+            <button type="submit">Зберегти</button>
+        </form>
     </div>
+
 </body>
 </html>
