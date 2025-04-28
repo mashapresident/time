@@ -69,7 +69,9 @@
       <h2>Події</h2>
       <div>
         <div style="display: flex; justify-content: flex-end;">
-          <button type="button" id="add_record" onclick="{{url_for('record') }}">Додати подію</button>
+          <form id="rec" action="/record" method="POST">
+            <button type="button" id="add_record">Додати подію</button>
+          </form>
         </div>
         <div id="records">
 
