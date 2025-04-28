@@ -1,7 +1,7 @@
 from datetime import datetime
 import asyncio
-import move_engine
-import player
+#import move_engine
+#import player
 
 def get_hour():
     return datetime.now().hour
