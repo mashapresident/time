@@ -22,12 +22,7 @@ async def index():
 
 @app.route('/record')
 async def record():
-    return await redirect(url_for('add_record'))
-
-@app.route('/add_record')
-async def add_record():
     return await render_template('add_record.html')
-
 
 
 async def background_timer():
