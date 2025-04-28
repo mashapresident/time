@@ -20,10 +20,9 @@ async def index():
     period = data['period']
     return await render_template('index.html', stp=steps_per_revolution, period=period)
 
-
-@app.route('/add_record')
-async def add_record():
-    return await render_template('add_record.html')
+@app.route('/record')
+async def record():
+    return await redirect(url_for('/add_record'))
 
 
 
