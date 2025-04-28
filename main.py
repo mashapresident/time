@@ -1,4 +1,6 @@
 import asyncio
+from crypt import methods
+
 import load_config
 import timer
 #import time
@@ -20,7 +22,7 @@ async def index():
     period = data['period']
     return await render_template('index.html', stp=steps_per_revolution, period=period)
 
-@app.route('/record')
+@app.route('/record', methods=['POST'])
 async def record():
     return await render_template('add_record.html')
 
