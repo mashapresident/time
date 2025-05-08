@@ -10,11 +10,11 @@
 <body>
     <div class="container">
         <h1>Додати нову подію</h1>
-        <form id="add_event_form">
-            <label for="event_name">Назва події:</label>
+        <form id="add_event_form" action="/save_record" method="POST">
+            <label for="event_name">Назва події</label>
             <input type="text" id="event_name" name="name" required>
 
-            <label for="repeat">Повторення:</label>
+            <label for="repeat">Повторення</label>
             <select id="repeat" name="repeat" onchange="updateFormFields()">
                 <option value="daily">Щодня</option>
                 <option value="weekly">Щотижня</option>
@@ -23,19 +23,19 @@
 
             <!-- Поле для часу -->
             <div id="time_field">
-                <label for="event_time">Час (24 години):</label>
+                <label for="event_time">Час</label>
                 <input type="time" id="event_time" name="time" required>
             </div>
 
             <!-- Поле для вибору дня тижня -->
             <div id="weekday_field" class="hidden">
-                <label for="weekday">День тижня:</label>
+                <label for="weekday">День тижня</label>
                 <select id="weekday" name="weekday">
-                    <option value="monday">Понеділок</option>
-                    <option value="tuesday">Вівторок</option>
-                    <option value="wednesday">Середа</option>
-                    <option value="thursday">Четвер</option>
-                    <option value="friday">П'ятниця</option>
+                    <option value="Monday">Понеділок</option>
+                    <option value="Tuesday">Вівторок</option>
+                    <option value="Wednesday">Середа</option>
+                    <option value="Thursday">Четвер</option>
+                    <option value="Friday">П'ятниця</option>
                     <option value="saturday">Субота</option>
                     <option value="sunday">Неділя</option>
                 </select>
@@ -45,6 +45,16 @@
             <div id="date_field" class="hidden">
                 <label for="event_date">Дата:</label>
                 <input type="date" id="event_date" name="date">
+            </div>
+
+            <h2>Оберіть файл mp3</h2>
+            <div class="audio-uploads">
+                <form id="upload_melody" action="/upload_melody" method="POST" enctype="multipart/form-data">
+                  <div class="drop-item">
+                    <button type="button" onclick="document.getElementById('melodiyaFile').click();">Мелодія</button>
+                    <input type="file" id="melodiyaFile" name="melodiya" accept="audio/*" style="display: none;" onchange="document.getElementById('upload_melodiya').submit();">
+                  </div>
+                </form>
             </div>
 
             <button type="submit">Зберегти</button>
