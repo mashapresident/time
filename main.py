@@ -55,27 +55,6 @@ async def shutdown():
             print("Background task successfully cancelled.")
 
 
-
-
-@app.route('/save_event', methods=['POST'])
-async def save_event():
-    new_event = request.json
-    if not new_event:
-        return jsonify({"error": "Invalid data"}), 400
-
-    try:
-        with open(JSON_FILE, 'r') as file:
-            events = json.load(file)
-    except FileNotFoundError:
-        events = []
-
-    events.append(new_event)
-
-    with open(JSON_FILE, 'w') as file:
-        json.dump(events, file, indent=4)
-
-    return jsonify({"message": "Event saved successfully"}), 200
-
 if __name__ == '__main__':
     from hypercorn.config import Config
     import hypercorn.asyncio

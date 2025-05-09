@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
-    <script src="{{ url_for('static', filename='js/add_record.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/add_record.js') }}"></script>
     <title>Додати подію</title>
 </head>
 <body>
@@ -23,7 +23,7 @@
 
             <!-- Поле для часу -->
             <div id="time_field">
-                <label for="event_time">Час</label>
+                <label for="event_time">Введіть час</label>
                 <input type="time" id="event_time" name="time" required>
             </div>
 
@@ -51,8 +51,8 @@
             <div class="audio-uploads">
                 <form id="upload_melody" action="/upload_melody" method="POST" enctype="multipart/form-data">
                   <div class="drop-item">
-                    <button type="button" onclick="document.getElementById('melodiyaFile').click();">Мелодія</button>
-                    <input type="file" id="melodiyaFile" name="melodiya" accept="audio/*" style="display: none;" onchange="document.getElementById('upload_melodiya').submit();">
+                    <button type="button" onclick="document.getElementById('melodyFile').click();">Мелодія</button>
+                    <input type="file" id="melodyFile" name="melody" accept="audio/*" style="display: none;" onchange="document.getElementById('upload_melody').submit();">
                   </div>
                 </form>
             </div>

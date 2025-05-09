@@ -11,10 +11,12 @@ body {
 
 h1 {
     color: #0056b3;
+    text-align: center;
 }
 h2 {
     margin-top: 30px;
     color: #007bff;
+    text-align: center;
 }
 
 label {
@@ -88,5 +90,22 @@ input[type="file"] {
 .drop-item button {
   width: 100%;
   margin-bottom: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+#repeat:has(option[value="daily"]:checked) ~ #weekday_field,
+#repeat:has(option[value="daily"]:checked) ~ #date_field {
+    display: none;
+}
+
+#repeat:has(option[value="weekly"]:checked) ~ #weekday_field {
+    display: block;
+}
+
+#repeat:has(option[value="one-time"]:checked) ~ #date_field {
+    display: block;
 }
 

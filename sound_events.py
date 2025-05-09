@@ -1,6 +1,6 @@
 from quart import Quart, request, render_template, redirect, url_for, jsonify
 from load_config import *
-from main import app
+from main import app, UPLOAD_FOLDER
 
 
 @app.route('/upload_melody', methods=['POST'])
