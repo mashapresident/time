@@ -11,10 +11,10 @@
     <div class="container_record">
         <h1>Додати нову подію</h1>
         <form id="add_event_form" action="/save_record" method="POST">
-            <label for="event_name">Назва події</label>
+            <label for="event_name" style="text-align:left;">Назва події</label>
             <input type="text" id="event_name" name="name" required>
 
-            <label for="repeat">Повторення</label>
+            <label for="repeat" style="text-align:left;">Повторення</label>
             <select id="repeat" name="repeat" onchange="updateFormFields()">
                 <option value="daily">Щодня</option>
                 <option value="weekly">Щотижня</option>
@@ -23,13 +23,13 @@
 
             <!-- Поле для часу -->
             <div id="time_field">
-                <label for="event_time">Введіть час</label>
+                <label for="event_time" style="text-align:left;" >Введіть час</label>
                 <input type="time" id="event_time" name="time" required>
             </div>
 
             <!-- Поле для вибору дня тижня -->
             <div id="weekday_field" class="hidden">
-                <label for="weekday">День тижня</label>
+                <label for="weekday" style="text-align:left;">День тижня</label>
                 <select id="weekday" name="weekday">
                     <option value="Monday">Понеділок</option>
                     <option value="Tuesday">Вівторок</option>
@@ -45,6 +45,7 @@
             <div id="date_field" class="hidden">
                 <label for="event_date">Дата:</label>
                 <input type="date" id="event_date" name="date">
+            </div>
             </div>
 
             <h2>Оберіть файл mp3</h2>
