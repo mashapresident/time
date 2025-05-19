@@ -13,16 +13,16 @@
      <h2>Зміна данних</h2>
     <!-- Форма для вводу кількості кроків -->
     <form id="set_steps" action="/set_steps" method="POST">
-      <label for="steps_per_revolution">Кількість кроків на оберт:</label>
+      <label for="steps_per_revolution">Кроки на оберт</label>
       <input id="steps_per_revolution" name="steps_per_revolution" required type="number" placeholder="{{stp}}">
-      <button type="submit">Ввести</button>
+      <button type="submit">Оновити</button>
     </form>
 
 
     <form id="set_period" action="/set_period" method="POST">
-      <label for="period_per_revolution">Час проходу на хвилину(с)</label>
+      <label for="period_per_revolution">Час проходу хвилини(с)</label>
       <input id="period_per_revolution" name="period_per_revolution" required type="number" placeholder="{{period}}">
-      <button type="submit">Ввести</button>
+      <button type="submit">Оновити</button>
     </form>
 
 
@@ -37,7 +37,7 @@
         <!-- Форма для калібрування за часом -->
     <h2>Калібрування стрілок за часом на годиннику</h2>
     <form id="calibrate_steps_fact" action="/calibrate_fact" method="POST">
-      <label for="calibration_time">Час на годиннику (гг:хх):</label>
+      <label for="calibration_time">Час на годиннику :</label>
       <input type="time" id="calibration_time" name="calibration_time" required>
       <button type="submit">Калібрувати</button>
     </form>
@@ -48,19 +48,18 @@
     <h2>Завантаження регулярної мелоії</h2>
     <div class="audio-uploads">
       <!-- Форма для завантаження мелодії -->
-        <form id="upload_melodiya" action="/upload_melodiya" method="POST" enctype="multipart/form-data">
+        <form id="upload_melody" action="/upload_melody" method="POST" enctype="multipart/form-data">
           <div class="drop-item">
-            <!-- Кнопка, яка відкриває діалог вибору файлу, але не надсилає форму -->
-            <button type="button" onclick="document.getElementById('melodiyaFile').click();">Мелодія</button>
-            <input type="file" id="melodiyaFile" name="melodiya" accept="audio/*" style="display: none;" onchange="document.getElementById('upload_melodiya').submit();">
+            <button type="button" onclick="document.getElementById('melodyFile').click();">Мелодія</button>
+            <input type="file" id="melodyFile" name="melody" accept="audio/mpeg" style="display: none;" onchange="document.getElementById('upload_melody').submit();">
           </div>
         </form>
 
       <!-- Форма для завантаження звуку стуку -->
-      <form id="upload_stuk" action="/upload_stuk" method="POST" enctype="multipart/form-data">
+      <form id="upload_knock" action="/upload_knock" method="POST" enctype="multipart/form-data">
         <div class="drop-item">
-          <button type="button" onclick="document.getElementById('stukSoundFile').click();">Звук стуку</button>
-          <input type="file" id="stukSoundFile" name="stuk" accept="audio/*" style="display: none;" onchange="document.getElementById('upload_stuk').submit();">
+          <button type="button" onclick="document.getElementById('knockSoundFile').click();">Звук стуку</button>
+          <input type="file" id="knockSoundFile" name="knock" accept="audio/mpeg" style="display: none;" onchange="document.getElementById('upload_knock').submit();">
         </div>
       </form>
     </div>
@@ -74,15 +73,38 @@
           </form>
         </div>
         <div id="records">
+          <h3>Список подій</h3>
+            <table border="1">
+                <tr>
+                    <th>Назва</th>
+                    <th>Дата</th>
+                    <th>День тижня</th>
+                    <th>Час</th>
+                    <th>Дії</th>
+                </tr>
+                {% for record in records %}
+                <tr>
+                    <td style="width:30%">{% if record.name %}{{ record.name }}{% else %}-{% endif %}</td>
+                    <td style="width:15%"> {% if record.date %}{{ record.date }}{% else %}-{% endif %}</td>
+                    <td style="width:15%">{% if record.dayOfWeek %}{{ record.dayOfWeek }}{% else %}-{% endif %}</td>
+                    <td style="width:15%">{% if record.time %}{{ record.time }}{% else %}-{% endif %}</td>
 
+                    <td style="width:25%" class="centered-cell">
+                  <form method="POST" action="/delete_record">
+                    <input type="hidden" name="record_id" value="{{ record.id }}">
+                    <button type="submit" class="delete_button" onclick="return confirm('Ви впевнені, що хочете видалити цю подію?')">
+                      Видалити подію
+                    </button>
+                  </form>
+                </td>
+
+                </tr>
+                {% endfor %}
+            </table>
 
         </div>
       </div>
-
-
     </div>
-
   </div>
-
 </body>
 </html>

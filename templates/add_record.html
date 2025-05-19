@@ -8,59 +8,65 @@
     <title>Додати подію</title>
 </head>
 <body>
-    <div class="container_record">
-        <h1>Додати нову подію</h1>
-        <form id="add_event_form" action="/save_record" method="POST">
-            <label for="event_name" style="text-align:left;">Назва події</label>
-            <input type="text" id="event_name" name="name" required>
+    <div class="container" >
+    <h1>Додати нову подію</h1>
 
-            <label for="repeat" style="text-align:left;">Повторення</label>
-            <select id="repeat" name="repeat" onchange="updateFormFields()">
+    <form id="add_event_form" action="/save_record" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="event_name">Назва події</label>
+            <input type="text" id="event_name" name="name">
+        </div>
+
+        <div class="form-group">
+            <label for="repeat">Повторення</label>
+            <select id="repeat" name="repeat">
                 <option value="daily">Щодня</option>
                 <option value="weekly">Щотижня</option>
                 <option value="one-time">Один раз</option>
             </select>
+        </div>
 
-            <!-- Поле для часу -->
-            <div id="time_field">
-                <label for="event_time" style="text-align:left;" >Введіть час</label>
-                <input type="time" id="event_time" name="time" required>
-            </div>
+        <div class="form-group">
+            <label for="event_time">Введіть час</label>
+            <input type="time" id="event_time" name="time">
+        </div>
 
-            <!-- Поле для вибору дня тижня -->
-            <div id="weekday_field" class="hidden">
-                <label for="weekday" style="text-align:left;">День тижня</label>
-                <select id="weekday" name="weekday">
-                    <option value="Monday">Понеділок</option>
-                    <option value="Tuesday">Вівторок</option>
-                    <option value="Wednesday">Середа</option>
-                    <option value="Thursday">Четвер</option>
-                    <option value="Friday">П'ятниця</option>
-                    <option value="saturday">Субота</option>
-                    <option value="sunday">Неділя</option>
-                </select>
-            </div>
+        <div class="form-group hidden" id="weekday_field">
+            <label for="weekday">День тижня</label>
+            <select id="weekday" name="weekday">
+                <option value="Monday">Понеділок</option>
+                <option value="Tuesday">Вівторок</option>
+                <option value="Wednesday">Середа</option>
+                <option value="Thursday">Четвер</option>
+                <option value="Friday">П'ятниця</option>
+                <option value="Saturday">Субота</option>
+                <option value="Sunday">Неділя</option>
+            </select>
+        </div>
 
-            <!-- Поле для вибору дати -->
-            <div id="date_field" class="hidden">
-                <label for="event_date">Дата:</label>
-                <input type="date" id="event_date" name="date">
-            </div>
-            </div>
+        <div class="form-group hidden" id="date_field">
+            <label for="event_date">Дата</label>
+            <input type="date" id="event_date" name="date">
+        </div>
 
-            <h2>Оберіть файл mp3</h2>
-            <div class="audio-uploads">
-                <form id="upload_melody" action="/upload_melody" method="POST" enctype="multipart/form-data">
-                  <div class="drop-item">
-                    <button type="button" onclick="document.getElementById('melodyFile').click();">Мелодія</button>
-                    <input type="file" id="melodyFile" name="melody" accept="audio/*" style="display: none;" onchange="document.getElementById('upload_melody').submit();">
-                  </div>
-                </form>
-            </div>
+        <div id="knock_after_option">
+            <label>Звук після програвання музики</label>
+            <label class="switch">
+                <input type="checkbox" name="knock">
+                <span class="slider round"></span>
+            </label>
 
-            <button type="submit">Зберегти</button>
-        </form>
-    </div>
+        </div>
+
+        <h2>Оберіть файл mp3</h2>
+        <div class="audio-uploads">
+            <button type="button" id="add_sound" onclick="document.getElementById('soundFile').click();">Завантажити звук події</button>
+            <input type="file" id="soundFile" name="melody" accept="audio/mpeg" style="display: none;">
+        </div>
+
+        <button type="submit">Зберегти</button>
+    </form>
+</div>
 
 </body>
 </html>
