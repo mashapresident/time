@@ -1,42 +1,32 @@
-# from time import sleep
-# import vlc
-# import asyncio
-# import time
-# import clock
-#
-# def play_sound(filename):
-#     """
-#     Синхронна функція для відтворення MP3-файлу за допомогою VLC.
-#     Функція блокує виконання, поки медіа не завершить відтворення.
-#     """
-#     instance = vlc.Instance()
-#     player = instance.media_player_new()
-#     media = instance.media_new(filename)
-#     player.set_media(media)
-#
-#     player.play()
-#     #Дамо плеєру кілька сотих секунди для старту відтворення
-#     time.sleep(0.2)
-#     while True:
-#         state = player.get_state()
-#         if state in (vlc.State.Ended, vlc.State.Stopped, vlc.State.Error):
-#            break
-#         time.sleep(0.1)
-#     print("Грає звук із файлу " + filename)
-#
-#
-# async def play(hour):
-#     try:
-#         await asyncio.to_thread(play_sound, clock.get_melody())
-#         for i in range(1, hour + 1):
-#             print(f"Відтворення звуку клаку — ітерація {i}")
-#             await asyncio.to_thread(play_sound, "music/files/stuk_audio.wav")
-#             await asyncio.sleep(0.2)
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
-#
-#
-# # Приклад використання:
-# if __name__ == '__main__':
-#     # Наприклад, потрібно відтворити звук клаку 3 рази після мелодії
-#     asyncio.run(play(3))
+import vlc
+from time import *
+import asyncio
+
+def play_melody(filename: str, knock: bool, hour: int):
+    """
+    Відтворює MP3-файл за допомогою VLC, блокуючи виконання, поки файл не завершиться.
+    Якщо `knock=True`, після мелодії запускається відтворення звуку клаку `hour` разів.
+    """
+
+    instance = vlc.Instance()
+    player = instance.media_player_new()
+    media = instance.media_new(filename)
+    player.set_media(media)
+
+    player.play()
+    time.sleep(0.2)
+
+    while player.get_state() not in (vlc.State.Ended, vlc.State.Stopped, vlc.State.Error):
+        time.sleep(0.1)
+
+    if knock:
+        asyncio.run(play_knock(hour))
+
+
+async def play_knock(hour: int):
+    """
+    Асинхронно відтворює звук клаку `hour` разів із паузою між кожним ударом.
+    """
+    for i in range(hour):
+        print(f"Відтворення звуку клаку — {i + 1}-й удар")
+        await asyncio.sleep(0.5)

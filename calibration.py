@@ -1,6 +1,8 @@
 from quart import Quart, request, render_template, redirect, url_for, jsonify
 import time
+import move_engine
 from main import app
+from move_engine import *
 
 #калібрування за поточним часом
 @app.route('/calibrate_fact', methods=['POST'])
@@ -30,7 +32,7 @@ async def calibrate_fact():
             return jsonify({"error": "Розрахунок часу некоректний."}), 400
 
         # Виклик функції для калібрування стрілок
-     #   await move_engine.fact_calibate(difference)
+        await move_engine.fact_calibate(difference)
 
         return redirect(url_for('index'))
     except Exception as e:
@@ -41,5 +43,5 @@ async def calibrate_fact():
 async def calibrate():
     form_data = await request.form
     calibration_steps = int(form_data['calibration_steps'])
-    #await move_engine.calibate(calibration_steps)
+    await move_engine.calibate(calibration_steps)
     return redirect(url_for('index'))

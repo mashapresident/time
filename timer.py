@@ -1,31 +1,60 @@
-from datetime import datetime
+from datetime import *
 import asyncio
-#import move_engine
-#import player
+from datetime import date
 
+import move_engine
+import player
+from record_model import get_filename
 def get_hour():
     return datetime.now().hour
 
 def get_minute():
     return datetime.now().minute
 
+def get_day_of_week():
+    days_ua = {
+        "Monday": "Понеділок",
+        "Tuesday": "Вівторок",
+        "Wednesday": "Середа",
+        "Thursday": "Четвер",
+        "Friday": "П’ятниця",
+        "Saturday": "Субота",
+        "Sunday": "Неділя"
+    }
+    english_day = datetime.today().strftime('%A')
+    return days_ua[english_day]
+
+def get_current_date() -> str:
+    return datetime.today().strftime("%d.%m.%Y")
+
+def get_current_time() -> str:
+    return datetime.now().strftime("%H:%M")
+
 async def run():
-    previous_minute = -1
+    previous_m = -1
+    previous_h = -1
     try:
         while True:
-            current_minute = get_minute()
-            if current_minute != previous_minute:
-                #await move_engine.step(1)
-                #if previous_minute == 59:
-                    #await player.play(int(get_hour())%12)
-                previous_minute = current_minute
+            current_m = get_minute()
+            current_h = get_hour()
+
+            if current_m != previous_m:
+                await move_engine.step(1)
+                date = get_current_date()
+                day_of_week = get_day_of_week()
+                time = get_current_time()
+
+                filename, knock_after = await get_filename(date, day_of_week, time)
+
+            if filename:
+                await player.play_melody(filename, knock_after, int(current_h % 12))
+
+            elif previous_h != current_h and previous_m == 59:
+                await player.play_melody("melody.mp3", True, int(current_h % 12))
+            else:
+                print("\nno records\n")
+            previous_m = current_m
+            previous_h = current_h
             await asyncio.sleep(0.5)
     except (KeyboardInterrupt, asyncio.CancelledError):
         print("Програма зупинена користувачем.")
-
-# Якщо потрібно запустити код напряму:
-if __name__ == '__main__':
-    try:
-        asyncio.run(run())
-    except KeyboardInterrupt:
-        print("Програма завершила роботу.")

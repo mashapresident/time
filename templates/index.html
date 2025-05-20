@@ -46,23 +46,23 @@
 
     <!-- Розділ для завантаження аудіо -->
     <h2>Завантаження регулярної мелоії</h2>
-    <div class="audio-uploads">
-      <!-- Форма для завантаження мелодії -->
-        <form id="upload_melody" action="/upload_melody" method="POST" enctype="multipart/form-data">
-          <div class="drop-item">
-            <button type="button" onclick="document.getElementById('melodyFile').click();">Мелодія</button>
-            <input type="file" id="melodyFile" name="melody" accept="audio/mpeg" style="display: none;" onchange="document.getElementById('upload_melody').submit();">
-          </div>
-        </form>
 
-      <!-- Форма для завантаження звуку стуку -->
-      <form id="upload_knock" action="/upload_knock" method="POST" enctype="multipart/form-data">
-        <div class="drop-item">
-          <button type="button" onclick="document.getElementById('knockSoundFile').click();">Звук стуку</button>
-          <input type="file" id="knockSoundFile" name="knock" accept="audio/mpeg" style="display: none;" onchange="document.getElementById('upload_knock').submit();">
-        </div>
+      <form id="upload_regular_records" action="/upload_regular_records" method="POST" enctype="multipart/form-data">
+        <div>
+          <div class="audio-uploads1">
+            <button type="button" id="add_melody" onclick="document.getElementById('melodyFile').click();">Мелодія</button>
+            <input type="file" id="melodyFile" name="melody" accept="audio/*" style="display: none;">
+          </div>
+
+          <div class="audio-uploads2">
+            <button type="button" id="add_knock" onclick="document.getElementById('knockSoundFile').click();">Звук стуку</button>
+            <input type="file" id="knockSoundFile" name="knock" accept="audio/*" style="display: none;">
+          </div>
+          </div>
+        <button type="submit">Зберегти</button>
+
       </form>
-    </div>
+
 
     <div>
       <h2>Події</h2>

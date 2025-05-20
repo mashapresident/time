@@ -1,4 +1,3 @@
-
 def get_t(step_per_revolution, period):
     return float((30*period))/step_per_revolution
 

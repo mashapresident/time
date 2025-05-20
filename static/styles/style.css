@@ -24,12 +24,6 @@ label {
     margin-top: 10px;
 }
 
-input[type="number"] {
-    margin: 10px 0;
-    padding: 5px;
-    width: 200px;
-}
-
 button {
     background-color: #007bff;
     color: white;
@@ -53,14 +47,22 @@ button:hover {
     margin-top: 50px;
     margin-bottom: 50px;
     text-align: center;
-    width: 50%;
+    width: 60%;
 }
 
-input[type="number"],
+input[type="number"]{
+  width: 500px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
 input[type="file"] {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
+
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -82,38 +84,135 @@ input[type="file"] {
   transition: border-color 0.3s ease, background 0.3s;
 }
 
-.drop-item:hover {
-  border-color: #007BFF;
-  background: #e6f0ff;
+.audio-uploads {
+    padding: 10px;
+    border: 2px dashed #2c5edd;
+    text-align: center;
+    margin-top: 20px;
 }
-
-.drop-item button {
-  width: 100%;
-  margin-bottom: 10px;
+.audio-uploads1 {
+    padding: 10px;
+    border: 2px dashed #2c5edd;
+    text-align: center;
+    margin-top: 20px;
+}
+.audio-uploads2 {
+    padding: 10px;
+    border: 2px dashed #2c5edd;
+    text-align: center;
+    margin-top: 20px;
 }
 
 .hidden {
     display: none;
 }
-
-#repeat:has(option[value="daily"]:checked) ~ #weekday_field,
-#repeat:has(option[value="daily"]:checked) ~ #date_field {
-    display: none;
+.form-group {
+    margin-bottom: 20px;
 }
 
-#repeat:has(option[value="weekly"]:checked) ~ #weekday_field {
-    display: block;
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
 }
 
-#repeat:has(option[value="one-time"]:checked) ~ #date_field {
-    display: block;
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
-.container_record {
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 20px;
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+#records h3 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+#records table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#records th, #records td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#records th {
+    background-color: #007bff;
+    color: white;
+}
+
+#records tr:nth-child(even) {
     background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#records tr:hover {
+    background-color: #f1f1f1;
+}
+.centered-cell {
     text-align: center;
+    vertical-align: middle;
+}
+
+/* Стиль кнопки видалення */
+.delete_button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 80%;
+}
+
+.delete_button:hover {
+    background-color: #c82333;
 }
