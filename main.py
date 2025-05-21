@@ -121,5 +121,5 @@ if __name__ == '__main__':
     import hypercorn.asyncio
 
     config = Config()
-    config.bind = ["192.168.1.243:5000"]
+    config.bind = ["10.1.1.250:5000"]
     asyncio.run(hypercorn.asyncio.serve(app, config))
