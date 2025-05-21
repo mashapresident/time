@@ -115,3 +115,11 @@ async def shutdown():
             await background_task
         except asyncio.CancelledError:
             print("Background task successfully cancelled.")
+
+if __name__ == '__main__':
+    from hypercorn.config import Config
+    import hypercorn.asyncio
+
+    config = Config()
+    config.bind = ["192.168.1.243:5000"]
+    asyncio.run(hypercorn.asyncio.serve(app, config))

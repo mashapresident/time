@@ -17,8 +17,8 @@ def load_configuration():
 
     try:
         if not os.path.exists(CONFIG_FILE):
-            config = {"steps_per_revolution": 400,
-                      "period": 5}
+            config = {"steps_per_revolution": 7500,
+                      "period": 3}
             with open(CONFIG_FILE, "w") as f:
                 json.dump(config, f)
             return config
@@ -27,8 +27,8 @@ def load_configuration():
                 return json.load(f)
     except (IOError, json.JSONDecodeError) as e:
         print(f"Error loading configuration: {e}")
-        return {"steps_per_revolution": 400,
-                "period": 5}
+        return {"steps_per_revolution": 7500,
+                "period": 3}
 
 
 def update_config(new_config):

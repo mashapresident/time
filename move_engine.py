@@ -46,7 +46,7 @@ async def step(min):
     steps = min * calculator.get_step_per_minute(steps_per_revolution)
     t = calculator.get_t(steps_per_revolution, period)
     try:
-        wiringpi.digitalWrite(DIR, 1)
+        wiringpi.digitalWrite(DIR, 0)
         for _ in range(int(steps)):
             wiringpi.digitalWrite(STEP, 1)
             await asyncio.sleep(t)
@@ -62,14 +62,14 @@ async def step(min):
 async def calibate(steps):
     try:
         if steps > 0:
-            wiringpi.digitalWrite(DIR, 1)
+            wiringpi.digitalWrite(DIR, 0)
             for _ in range(int(steps)):
                 wiringpi.digitalWrite(STEP, 1)
                 await asyncio.sleep(0.01)
                 wiringpi.digitalWrite(STEP, 0)
                 await asyncio.sleep(0.01)
         elif steps < 0:
-            wiringpi.digitalWrite(DIR, 0)
+            wiringpi.digitalWrite(DIR, 1)
             for _ in range(int(abs(steps))):
                 wiringpi.digitalWrite(STEP, 1)
                 await asyncio.sleep(0.01)
@@ -94,14 +94,14 @@ async def fact_calibate(min):
 
     try:
         if steps > 0:
-            wiringpi.digitalWrite(DIR, 1)
+            wiringpi.digitalWrite(DIR, 0)
             for _ in range(int(steps)):
                 wiringpi.digitalWrite(STEP, 1)
                 await asyncio.sleep(0.01)
                 wiringpi.digitalWrite(STEP, 0)
                 await asyncio.sleep(0.01)
         elif steps < 0:
-            wiringpi.digitalWrite(DIR, 0)
+            wiringpi.digitalWrite(DIR, 1)
             for _ in range(int(abs(steps))):
                 wiringpi.digitalWrite(STEP, 1)
                 await asyncio.sleep(0.01)
