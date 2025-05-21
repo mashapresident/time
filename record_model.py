@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional
 from sqlalchemy import *
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import *
 import os
 from db import Base, engine, async_session
 from datetime import *
