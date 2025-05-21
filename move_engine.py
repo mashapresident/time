@@ -4,8 +4,8 @@ import asyncio
 from load_config import  *
 import calculator
 
-if not os.getegid() == 0:
-    sys.exit('Script must be run as root')
+# if not os.getegid() == 0:
+#     sys.exit('Script must be run as root')
 
 import wiringpi
 
