@@ -1,21 +1,65 @@
 import asyncio
 from crypt import methods
 from werkzeug.utils import secure_filename
-from quart import Quart, request, render_template, redirect, url_for, jsonify
+from quart import Quart, request, render_template, redirect, url_for, jsonify, session
 from load_config import *
+from db import async_session
+from user_model import Users
 from record_model import *
 from timer import run
 app = Quart(__name__)
+from functools import wraps
+from sqlalchemy import *
+app.secret_key = "kpi_clock"
 
-@app.route('/')
-async def index():
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        async with async_session() as session:
+            if 'id' not in session:
+                return redirect(url_for('login'))
+            return f(*args, **kwargs)
+        return decorated_function
+
+@app.route("/")
+async def login():
+    return await render_template("login.html")
+
+@app.route("/main_page", methods=["POST"])
+async def login_post():
+    form = await request.form
+    username = form.get("username")
+    password = form.get("password")
+
+    async with async_session() as sess:
+        result = await sess.execute(
+            Users.__table__.select().where(
+                Users.username == username,
+                Users.password == password
+            )
+        )
+        user = result.fetchone()
+
+        if user:
+            session["user_id"] = user.id
+            return redirect(url_for("main"))
+        else:
+            return await render_template("login.html", error="Невірний логін або пароль")
+
+
+@app.route('/main_page')
+@login_required
+async def main_page():
     data = load_configuration()
     steps_per_revolution = data['steps_per_revolution']
     period = data['period']
     records = await get_all_records()
-    return await render_template('index.html', stp=steps_per_revolution, period=period, records=records)
+    return await render_template('main_page.html', stp=steps_per_revolution, period=period, records=records)
+
 
 @app.route('/record', methods=['POST'])
+@login_required
 async def record():
     return await render_template('add_record.html')
 
@@ -31,6 +75,7 @@ async def background_timer():
         raise
 
 @app.route('/save_record', methods=['POST'])
+@login_required
 async def save_event():
     if request.method == 'POST':
         print(await request.form)
@@ -70,6 +115,7 @@ async def save_event():
     return redirect(url_for('index'))
 
 @app.route('/delete_record', methods=['POST'])
+@login_required
 async def delete_record():
     print(await request.form)
     form = await request.form
@@ -79,6 +125,7 @@ async def delete_record():
     return redirect(url_for('index'))
 
 @app.route('/upload_regular_records', methods=['POST'])
+@login_required
 async def upload_regular_melody():
     if request.method == 'POST':
         print(await request.files)
@@ -102,11 +149,13 @@ async def upload_regular_melody():
     return redirect(url_for('index'))
 
 @app.before_serving
+@login_required
 async def startup():
     await init_db()
     asyncio.create_task(run())
 
 @app.after_serving
+@login_required
 async def shutdown():
     global background_task
     if background_task is not None:
@@ -121,6 +170,7 @@ from move_engine import *
 
 #калібрування за поточним часом
 @app.route('/calibrate_fact', methods=['POST'])
+@login_required
 async def calibrate_fact():
     """Калібрує стрілки годинника на основі часу, введеного користувачем."""
     try:
@@ -139,27 +189,25 @@ async def calibrate_fact():
         entered_total = entered_hour * 60 + entered_minute
         current_total = current_hour * 60 + current_minute
 
-        # Різниця у хвилинах між введеним і поточним часом
         difference = current_total - entered_total
 
-        # Валідація різниці
         if not isinstance(difference, int):
             return jsonify({"error": "Розрахунок часу некоректний."}), 400
 
-        # Виклик функції для калібрування стрілок
         await move_engine.fact_calibate(difference)
 
-        return redirect(url_for('index'))
+        return redirect(url_for('main_page'))
     except Exception as e:
         return jsonify({"error": f"Помилка сервера: {e}"}), 500
 
 
 @app.route('/calibrate', methods=['POST'])
+@login_required
 async def calibrate():
     form_data = await request.form
     calibration_steps = int(form_data['calibration_steps'])
     await move_engine.calibate(calibration_steps)
-    return redirect(url_for('index'))
+    return redirect(url_for('main_page'))
 
 
 if __name__ == '__main__':

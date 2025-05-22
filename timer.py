@@ -40,19 +40,19 @@ async def run():
 
             if current_m != previous_m:
                 await move_engine.step(1)
+
                 date = get_current_date()
                 day_of_week = get_day_of_week()
                 time = get_current_time()
 
                 filename, knock_after = await get_filename(date, day_of_week, time)
 
-            if filename:
-                await player.play_melody(filename, knock_after, int(current_h % 12))
+                if filename:
+                    await player.play_melody(filename, knock_after, int(current_h % 12))
 
-            elif previous_h != current_h and previous_m == 59:
-                await player.play_melody("melody.mp3", True, int(current_h % 12))
-            else:
-                print("\nno records\n")
+                elif previous_h != current_h and previous_m == 59:
+                    await player.play_melody("melody.mp3", True, int(current_h % 12))
+
             previous_m = current_m
             previous_h = current_h
             await asyncio.sleep(0.5)
