@@ -1,13 +1,14 @@
 import vlc
 from time import *
 import asyncio
-
+import time
+from load_config import UPLOAD_FOLDER
 def play_melody(filename: str, knock: bool, hour: int):
     """
     Відтворює MP3-файл за допомогою VLC, блокуючи виконання, поки файл не завершиться.
     Якщо `knock=True`, після мелодії запускається відтворення звуку клаку `hour` разів.
     """
-
+    filepath = UPLOAD_FOLDER + filename
     instance = vlc.Instance()
     player = instance.media_player_new()
     media = instance.media_new(filename)
