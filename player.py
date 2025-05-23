@@ -11,7 +11,7 @@ def play_melody(filename: str, knock: bool, hour: int):
     filepath = UPLOAD_FOLDER + filename
     instance = vlc.Instance()
     player = instance.media_player_new()
-    media = instance.media_new(filename)
+    media = instance.media_new(filepath)
     player.set_media(media)
 
     player.play()
