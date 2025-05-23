@@ -45,7 +45,7 @@ async def run():
                 day_of_week = get_day_of_week()
                 time = get_current_time()
 
-                filename, knock_after = await get_filename(date, day_of_week, time)
+                filename, knock_after = get_filename(date, day_of_week, time)
 
                 if filename:
                     await player.play_melody(filename, knock_after, int(current_h % 12))
