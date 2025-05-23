@@ -29,5 +29,4 @@ async def play_knock(hour: int):
     Асинхронно відтворює звук клаку `hour` разів із паузою між кожним ударом.
     """
     for i in range(hour):
-        print(f"Відтворення звуку клаку — {i + 1}-й удар")
-        await asyncio.sleep(0.5)
+        time.sleep(0.5)
