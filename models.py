@@ -27,7 +27,7 @@ class Record(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(40), nullable=False)
-    priority = Column(Integer, nullable=False)   Виправлено
+    priority = Column(Integer, nullable=False)
     date = Column(String, nullable=True)
     dayOfWeek = Column(String, nullable=True)
     filename = Column(String, nullable=False)
