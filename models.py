@@ -83,7 +83,6 @@ def delete_record(record_id: int):
         if record:
             session.delete(record)
             session.commit()
-        else:
 
 
 def get_filename(date_value: str, day_of_week: str, time_value: str) -> Tuple[Optional[str], Optional[bool]]:
