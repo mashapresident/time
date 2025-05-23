@@ -6,18 +6,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
 </head>
 <body>
+    <div class="container" >
     <h1>Логін</h1>
     {% if error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}
-    <form action="/main_page" method="POST">
-        <label for="login">Логін:</label>
-        <input type="text" id="login" name="username">
-        <br>
-        <label for="password">Пароль:</label>
-        <input type="text" id="password" name="password">
-        <br>
+    <form action="/login" method="POST">
+        <div class="form-group">
+            <label for="login">Логін:</label>
+            <input type="text" id="login" name="username">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password">
+        </div>
         <button type="submit">Увійти</button>
     </form>
+    </div>
 </body>
 </html>

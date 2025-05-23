@@ -1,51 +1,59 @@
+
 import asyncio
-from crypt import methods
+import time
 from werkzeug.utils import secure_filename
 from quart import Quart, request, render_template, redirect, url_for, jsonify, session
 from load_config import *
-from db import async_session
-from user_model import Users
-from record_model import *
-from timer import run
-app = Quart(__name__)
+from db import engine
+from models import *
+from timer import run as timer_run
 from functools import wraps
-from sqlalchemy import *
+from typing import Optional
+
+app = Quart(__name__)
 app.secret_key = "kpi_clock"
 
 
 def login_required(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
-        async with async_session() as session:
-            if 'id' not in session:
-                return redirect(url_for('login'))
-            return f(*args, **kwargs)
-        return decorated_function
+    async def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login'))
+        return await f(*args, **kwargs)
+    return decorated_function
 
-@app.route("/")
+#ROUTES
+@app.route('/')
+async def index():
+    return redirect(url_for('login'))
+
+
+@app.route("/login", methods=["GET", "POST"])
 async def login():
-    return await render_template("login.html")
+    if request.method == "POST":
+        form = await request.form
+        username = form.get("username", "").strip()
+        password = form.get("password", "").strip()
 
-@app.route("/main_page", methods=["POST"])
-async def login_post():
-    form = await request.form
-    username = form.get("username")
-    password = form.get("password")
+        if not username or not password:
+            return await render_template("login.html", error="Будь ласка, введіть логін і пароль")
 
-    async with async_session() as sess:
-        result = await sess.execute(
-            Users.__table__.select().where(
-                Users.username == username,
-                Users.password == password
-            )
-        )
-        user = result.fetchone()
+        def check_user(username, password):
+            with db.session() as session:
+                user = session.query(User).filter(
+                    (User.name == username) & (User.password == password)
+                ).first()
+                return user
+
+        user = await asyncio.to_thread(check_user, username, password)
 
         if user:
             session["user_id"] = user.id
-            return redirect(url_for("main"))
+            return redirect(url_for("main_page"))
         else:
             return await render_template("login.html", error="Невірний логін або пароль")
+
+    return await render_template("login.html")
 
 
 @app.route('/main_page')
@@ -54,9 +62,15 @@ async def main_page():
     data = load_configuration()
     steps_per_revolution = data['steps_per_revolution']
     period = data['period']
-    records = await get_all_records()
-    return await render_template('main_page.html', stp=steps_per_revolution, period=period, records=records)
+    
+    records = await asyncio.to_thread(get_all_records)  
 
+    return await render_template(
+        'main_page.html',
+        stp=steps_per_revolution,
+        period=period,
+        records=records
+    )
 
 @app.route('/record', methods=['POST'])
 @login_required
@@ -64,142 +78,131 @@ async def record():
     return await render_template('add_record.html')
 
 
-async def background_timer():
-    """Фоновий таск, який періодично викликає timer.run()."""
+#BASIC SETTINGS
+@app.route('/set_steps', methods=['POST'])
+async def set_steps():
+    form_data = await request.form
     try:
-        while True:
-            await timer.run()
-            await asyncio.sleep(1)
-    except asyncio.CancelledError:
-        print("Background timer cancelled properly.")
-        raise
+        new_steps = int(form_data['steps_per_revolution'])
+    except ValueError:
+        return "Invalid input", 400
 
+    # Оновлюємо глобальну змінну та конфігураційний файл
+    global steps_per_revolution, config_data
+    steps_per_revolution = new_steps
+    config_data["steps_per_revolution"] = new_steps
+    update_config(config_data)
+
+    return redirect(url_for('index'))
+
+@app.route('/set_period', methods=['POST'])
+async def set_period():
+    form_data = await request.form
+    try:
+        new_steps = int(form_data['period_per_revolution'])
+    except ValueError:
+        return "Invalid input", 400
+    # Оновлюємо глобальну змінну та конфігураційний файл
+    global period, config_data
+    period = new_steps
+    config_data["period"] = new_steps
+    update_config(config_data)
+
+    return redirect(url_for('index'))
+
+#MUSIC ACTIONS
 @app.route('/save_record', methods=['POST'])
 @login_required
 async def save_event():
-    if request.method == 'POST':
-        print(await request.form)
-        form = await request.form
-        name = form['name']
-        repeat = form['repeat']
-        time = form['time']
-        date = ''
-        weekday = ''
-        priority = 3
-        if  repeat == 'weekly':
-            weekday = form['weekday']
-            priority = 2
-        elif repeat == 'one-time':
-            date = form['date']
-            priority = 1
-        if 'knock' in form:
-            knock_after = 1
-        else:
-            knock_after = 0
-        files = await request.files
-        if 'melody' not in files:
-            return "Помилка: файл не був завантажений", 400
-        audio =  files['melody']
-        filename = secure_filename(audio.filename)
-        await audio.save(os.path.join(UPLOAD_FOLDER, filename))
-        new_event = {
-            "date": date,
-            "priority": priority,
-            "dayOfWeek": weekday,
-            "filename": filename,
-            "name": name,
-            "time": time,
-            "knockAfter": knock_after
-        }
-        await add_record(new_event)
-    return redirect(url_for('index'))
+    form = await request.form
+    name = form['name']
+    repeat = form['repeat']
+    time_str = form['time']
+    date = ''
+    weekday = ''
+    priority = 3
+
+    if repeat == 'weekly':
+        weekday = form['weekday']
+        priority = 2
+    elif repeat == 'one-time':
+        date = form['date']
+        priority = 1
+
+    knock_after = 'knock' in form
+
+    files = await request.files
+    audio = files.get('melody')
+    if not audio:
+        return "Помилка: файл не був завантажений", 400
+
+    filename = secure_filename(audio.filename)
+    await audio.save(os.path.join(UPLOAD_FOLDER, filename))
+    new_event = {
+        "date": date,
+        "priority": priority,
+        "dayOfWeek": weekday,
+        "filename": filename,
+        "name": name,
+        "time": time_str,
+        "knockAfter": knock_after
+    }
+    await asyncio.to_thread(add_record, new_event) 
+    return redirect(url_for('main_page'))
 
 @app.route('/delete_record', methods=['POST'])
 @login_required
-async def delete_record():
-    print(await request.form)
+async def delete_record_route():
     form = await request.form
     record_id = form['record_id']
     if record_id:
-        await delete(int(record_id))
-    return redirect(url_for('index'))
+        await asyncio.to_thread(delete_record, int(record_id))
+    return redirect(url_for('main_page'))
 
 @app.route('/upload_regular_records', methods=['POST'])
 @login_required
 async def upload_regular_melody():
-    if request.method == 'POST':
-        print(await request.files)
-        files = await request.files
-        melody_file = files['melody']
-        knock_file = files['knock']
-        if melody_file:
-            fixed_filename = "melody.mp3"
-            file_path = os.path.join(REGULAR_MUSIC_FOLDER, fixed_filename)
-            await melody_file.save(file_path)
-            print("melody file")
-        else:
-            print("no melody file")
-        if knock_file:
-            fixed_filename = secure_filename("knock.mp3")
-            file_path = os.path.join(REGULAR_MUSIC_FOLDER, fixed_filename)
-            await knock_file.save(file_path)
-            print("knock file")
-        else:
-            print("no knock file")
-    return redirect(url_for('index'))
+    files = await request.files
+    melody_file = files.get('melody')
+    knock_file = files.get('knock')
 
-@app.before_serving
-@login_required
-async def startup():
-    await init_db()
-    asyncio.create_task(run())
+    if melody_file:
+        await melody_file.save(os.path.join(REGULAR_MUSIC_FOLDER, "melody.mp3"))
+        print("melody file uploaded")
+    else:
+        print("no melody file")
 
-@app.after_serving
-@login_required
-async def shutdown():
-    global background_task
-    if background_task is not None:
-        background_task.cancel()
-        try:
-            await background_task
-        except asyncio.CancelledError:
-            print("Background task successfully cancelled.")
-import time
-import move_engine
-from move_engine import *
+    if knock_file:
+        await knock_file.save(os.path.join(REGULAR_MUSIC_FOLDER, "knock.mp3"))
+        print("knock file uploaded")
+    else:
+        print("no knock file")
 
-#калібрування за поточним часом
+    return redirect(url_for('main_page'))
+
+
+#КАЛІБРУВАННЯ
 @app.route('/calibrate_fact', methods=['POST'])
 @login_required
 async def calibrate_fact():
-    """Калібрує стрілки годинника на основі часу, введеного користувачем."""
     try:
         form_data = await request.form
         calibration_time_str = str(form_data['calibration_time'])
+
         try:
             entered_hour, entered_minute = map(int, calibration_time_str.split(':'))
         except ValueError:
             return jsonify({"error": "Некоректний формат часу. Очікується формат HH:MM."}), 400
 
         now = time.localtime()
-        current_hour = now.tm_hour
-        current_minute = now.tm_min
-
-        # Перетворення часу в загальну кількість хвилин від початку доби
+        current_total = now.tm_hour * 60 + now.tm_min
         entered_total = entered_hour * 60 + entered_minute
-        current_total = current_hour * 60 + current_minute
-
         difference = current_total - entered_total
 
-        if not isinstance(difference, int):
-            return jsonify({"error": "Розрахунок часу некоректний."}), 400
-
         await move_engine.fact_calibate(difference)
-
         return redirect(url_for('main_page'))
     except Exception as e:
         return jsonify({"error": f"Помилка сервера: {e}"}), 500
-
 
 @app.route('/calibrate', methods=['POST'])
 @login_required
@@ -208,6 +211,23 @@ async def calibrate():
     calibration_steps = int(form_data['calibration_steps'])
     await move_engine.calibate(calibration_steps)
     return redirect(url_for('main_page'))
+
+
+
+
+
+@app.before_serving
+async def startup():
+    init_db(engine)
+    asyncio.create_task(timer_run())
+
+@app.after_serving
+async def shutdown():
+    print("Shutting down application")
+
+
+
+
 
 
 if __name__ == '__main__':

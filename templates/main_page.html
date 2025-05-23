@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <title>Stepper Motor Control</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Stepper Motor Control</h1>
+     <h2>Зміна данних</h2>
+    <!-- Форма для вводу кількості кроків -->
+    <form id="set_steps" action="/set_steps" method="POST">
+      <label for="steps_per_revolution">Кроки на оберт</label>
+      <input id="steps_per_revolution" name="steps_per_revolution" required type="number" placeholder="{{stp}}">
+      <button type="submit">Оновити</button>
+    </form>
+
+    <form id="set_period" action="/set_period" method="POST">
+      <label for="period_per_revolution">Час проходу хвилини(с)</label>
+      <input id="period_per_revolution" name="period_per_revolution" required type="number" placeholder="{{period}}">
+      <button type="submit">Оновити</button>
+    </form>
+
+
+    <!-- Форма для калібрування -->
+    <h2>Калібрування стрілок</h2>
+    <form id="calibrate_steps" action="/calibrate" method="POST">
+      <label for="calibration_steps">Кількість кроків для калібрування:</label>
+      <input type="number" id="calibration_steps" name="calibration_steps" required>
+      <button type="submit">Калібрувати</button>
+    </form>
+
+        <!-- Форма для калібрування за часом -->
+    <h2>Калібрування стрілок за часом на годиннику</h2>
+    <form id="calibrate_steps_fact" action="/calibrate_fact" method="POST">
+      <label for="calibration_time">Час на годиннику :</label>
+      <input type="time" id="calibration_time" name="calibration_time" required>
+      <button type="submit">Калібрувати</button>
+    </form>
+
+
+
+    <!-- Розділ для завантаження аудіо -->
+    <h2>Завантаження регулярної мелоії</h2>
+
+      <form id="upload_regular_records" action="/upload_regular_records" method="POST" enctype="multipart/form-data">
+        <div>
+          <div class="audio-uploads1">
+            <button type="button" id="add_melody" onclick="document.getElementById('melodyFile').click();">Мелодія</button>
+            <input type="file" id="melodyFile" name="melody" accept="audio/*" style="display: none;">
+          </div>
+
+          <div class="audio-uploads2">
+            <button type="button" id="add_knock" onclick="document.getElementById('knockSoundFile').click();">Звук стуку</button>
+            <input type="file" id="knockSoundFile" name="knock" accept="audio/*" style="display: none;">
+          </div>
+          </div>
+        <button type="submit">Зберегти</button>
+
+      </form>
+
+
+    <div>
+      <h2>Події</h2>
+      <div>
+        <div style="display: flex; justify-content: flex-end;">
+          <form id="rec" action="/record" method="POST">
+            <button type="submit" id="add_record">Додати подію</button>
+          </form>
+        </div>
+        <div id="records">
+          <h3>Список подій</h3>
+            <table border="1">
+                <tr>
+                    <th>Назва</th>
+                    <th>Дата</th>
+                    <th>День тижня</th>
+                    <th>Час</th>
+                    <th>Дії</th>
+                </tr>
+                {% for record in records %}
+                <tr>
+                    <td style="width:30%">{% if record.name %}{{ record.name }}{% else %}-{% endif %}</td>
+                    <td style="width:15%"> {% if record.date %}{{ record.date }}{% else %}-{% endif %}</td>
+                    <td style="width:15%">{% if record.dayOfWeek %}{{ record.dayOfWeek }}{% else %}-{% endif %}</td>
+                    <td style="width:15%">{% if record.time %}{{ record.time }}{% else %}-{% endif %}</td>
+
+                    <td style="width:25%" class="centered-cell">
+                  <form method="POST" action="/delete_record">
+                    <input type="hidden" name="record_id" value="{{ record.id }}">
+                    <button type="submit" class="delete_button" onclick="return confirm('Ви впевнені, що хочете видалити цю подію?')">
+                      Видалити подію
+                    </button>
+                  </form>
+                </td>
+
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

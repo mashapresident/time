@@ -4,7 +4,7 @@ from datetime import date
 
 import move_engine
 import player
-from record_model import get_filename
+from models import get_filename
 def get_hour():
     return datetime.now().hour
 
@@ -17,7 +17,7 @@ def get_day_of_week():
         "Tuesday": "Вівторок",
         "Wednesday": "Середа",
         "Thursday": "Четвер",
-        "Friday": "П’ятниця",
+        "Friday": "П'ятниця",
         "Saturday": "Субота",
         "Sunday": "Неділя"
     }
