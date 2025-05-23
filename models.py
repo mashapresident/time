@@ -74,7 +74,7 @@ def add_record(new_event: dict):
     with db.session() as session:
         session.add(record)
         session.commit()
-        print("Запис додано успішно")
+
 
 
 def delete_record(record_id: int):
@@ -83,17 +83,11 @@ def delete_record(record_id: int):
         if record:
             session.delete(record)
             session.commit()
-            print(f"Запис з id={record_id} успішно видалено")
         else:
-            print(f"Запис з id={record_id} не знайдено")
 
 
 def get_filename(date_value: str, day_of_week: str, time_value: str) -> Tuple[Optional[str], Optional[bool]]:
     with db.session() as session:
-        print(str(get_all_records()) + "\n")
-        print(date_value)
-        print(day_of_week)
-        print(time_value)
         records = session.query(Record).filter(
             or_(
                 and_(Record.date == date_value, Record.dayOfWeek.is_(None), Record.time == time_value),
@@ -103,6 +97,4 @@ def get_filename(date_value: str, day_of_week: str, time_value: str) -> Tuple[Op
         ).order_by(Record.priority).all()
 
         record = records[0] if records else None
-
-        print(record.filename if record else "Запис не знайдено")
         return (record.filename, record.knockAfter) if record else (None, None)
