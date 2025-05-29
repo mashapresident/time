@@ -48,13 +48,12 @@ async def run():
 
                 if filename:
                     await player.play_melody(filename, knock_after, int(current_h % 12))
-
                 elif previous_h != current_h and previous_m == 59:
-                    pass
                     await player.play_melody("melody.mp3", True, int(current_h % 12))
 
             previous_m = current_m
             previous_h = current_h
             await asyncio.sleep(0.5)
+
     except (KeyboardInterrupt, asyncio.CancelledError):
-        print("Програма зупинена користувачем.")
+        print("Програму завершено.")
