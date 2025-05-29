@@ -166,8 +166,8 @@ async def delete_record_route():
 @login_required
 async def upload_regular_melody():
     files = await request.files
-    melody_file = files.get('melody')
-    knock_file = files.get('knock')
+    melody_file = files['melody']
+    knock_file = files['knock']
 
     if melody_file:
         await melody_file.save(os.path.join(REGULAR_MUSIC_FOLDER, "melody.mp3"))
