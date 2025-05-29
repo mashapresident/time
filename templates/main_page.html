@@ -14,13 +14,28 @@
     <!-- Форма для вводу кількості кроків -->
     <form id="set_steps" action="/set_steps" method="POST">
       <label for="steps_per_revolution">Кроки на оберт</label>
-      <input id="steps_per_revolution" name="steps_per_revolution" required type="number" placeholder="{{stp}}">
+      <input
+        id="steps_per_revolution"
+        name="steps_per_revolution"
+        required
+        type="number"
+        min="1"
+        step="1"
+        placeholder="{{stp}}"
+      >
       <button type="submit">Оновити</button>
     </form>
 
     <form id="set_period" action="/set_period" method="POST">
-      <label for="period_per_revolution">Час проходу хвилини(с)</label>
-      <input id="period_per_revolution" name="period_per_revolution" required type="number" placeholder="{{period}}">
+      <label for="period_per_revolution">Час проходу хвилини (с)</label>
+      <input
+        id="period_per_revolution"
+        name="period_per_revolution"
+        required
+        type="number"
+        min="0"
+        placeholder="{{period}}"
+      >
       <button type="submit">Оновити</button>
     </form>
 

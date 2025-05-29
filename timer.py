@@ -1,10 +1,10 @@
 from datetime import *
 import asyncio
 from datetime import date
-
 import move_engine
 import player
 from models import get_filename
+from task_queue import *
 def get_hour():
     return datetime.now().hour
 
@@ -39,8 +39,7 @@ async def run():
             current_h = get_hour()
 
             if current_m != previous_m:
-                await move_engine.step(1)
-
+                enqueue_task(move_engine.step, 1)
                 date = get_current_date()
                 day_of_week = get_day_of_week()
                 time = get_current_time()
@@ -51,6 +50,7 @@ async def run():
                     await player.play_melody(filename, knock_after, int(current_h % 12))
 
                 elif previous_h != current_h and previous_m == 59:
+                    pass
                     await player.play_melody("melody.mp3", True, int(current_h % 12))
 
             previous_m = current_m

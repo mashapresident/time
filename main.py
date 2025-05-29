@@ -1,6 +1,6 @@
-
 import asyncio
 import time
+from threading import Thread
 from werkzeug.utils import secure_filename
 from quart import Quart, request, render_template, redirect, url_for, jsonify, session
 from load_config import *
@@ -8,10 +8,13 @@ from db import engine
 from models import *
 from timer import run as timer_run
 from functools import wraps
-from typing import Optional
+from move_engine import *
+import move_engine
+from task_queue import *
 
 app = Quart(__name__)
 app.secret_key = "kpi_clock"
+
 
 
 def login_required(f):
@@ -83,7 +86,7 @@ async def record():
 async def set_steps():
     form_data = await request.form
     try:
-        new_steps = int(form_data['steps_per_revolution'])
+        new_steps = float(form_data['steps_per_revolution'])
     except ValueError:
         return "Invalid input", 400
 
@@ -185,6 +188,7 @@ async def upload_regular_melody():
 @app.route('/calibrate_fact', methods=['POST'])
 @login_required
 async def calibrate_fact():
+
     try:
         form_data = await request.form
         calibration_time_str = str(form_data['calibration_time'])
@@ -199,7 +203,7 @@ async def calibrate_fact():
         entered_total = entered_hour * 60 + entered_minute
         difference = current_total - entered_total
 
-        await move_engine.fact_calibate(difference)
+        enqueue_task(fact_calibate, difference)
         return redirect(url_for('main_page'))
     except Exception as e:
         return jsonify({"error": f"Помилка сервера: {e}"}), 500
@@ -209,10 +213,12 @@ async def calibrate_fact():
 async def calibrate():
     form_data = await request.form
     calibration_steps = int(form_data['calibration_steps'])
-    await move_engine.calibate(calibration_steps)
-    return redirect(url_for('main_page'))
-
-
+    try:
+        enqueue_task(move_engine.calibate, calibration_steps)
+        print("калібрування на {calibration_steps} кроків")
+        return redirect(url_for('main_page'))
+    except:
+        print("не прокалібрувалось")
 
 
 
@@ -220,13 +226,11 @@ async def calibrate():
 async def startup():
     init_db(engine)
     asyncio.create_task(timer_run())
+    asyncio.create_task(process_queue())
 
 @app.after_serving
 async def shutdown():
     print("Shutting down application")
-
-
-
 
 
 

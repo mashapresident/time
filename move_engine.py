@@ -3,7 +3,6 @@ import time
 import asyncio
 from load_config import  *
 import calculator
-
 if not os.getegid() == 0:
     sys.exit('Script must be run as root')
 
@@ -16,8 +15,6 @@ __license__ = "GPL"
 __version__ = "2.0"
 __maintainer__ = __author__
 __email__ = "support@olimex.com"
-
-
 
 
 def millis():
@@ -35,10 +32,6 @@ wiringpi.pinMode(EN, 1)
 
 #функція для щохвилинного проходу
 async def step(min):
-    """
-    Асинхронна функція для керування кроками двигуна.
-    Блокуючі виклики time.sleep() замінено на await asyncio.sleep().
-    """
     config_data = load_configuration()
     steps_per_revolution = config_data.get("steps_per_revolution", 400)
     period = config_data.get("period", 5)
@@ -91,7 +84,6 @@ async def fact_calibate(min):
     steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
     steps = min * calculator.get_step_per_minute(steps_per_revolution)
-
     try:
         if steps > 0:
             wiringpi.digitalWrite(DIR, 0)
@@ -107,9 +99,5 @@ async def fact_calibate(min):
                 await asyncio.sleep(0.01)
                 wiringpi.digitalWrite(STEP, 0)
                 await asyncio.sleep(0.01)
-    except asyncio.CancelledError:
-        print("Operation cancelled.")
-        raise
     except Exception as e:
         print("An error occurred:", e)
-
