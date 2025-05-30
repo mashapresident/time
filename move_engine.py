@@ -16,6 +16,10 @@ __version__ = "2.0"
 __maintainer__ = __author__
 __email__ = "support@olimex.com"
 
+config_data = load_configuration()
+steps_per_revolution = config_data.get("steps_per_revolution", 400)
+period = config_data.get("period", 5)
+t = calculator.get_t(steps_per_revolution, period)
 
 def millis():
     return time.time() * 1000
@@ -31,20 +35,16 @@ wiringpi.pinMode(STEP, 1)
 wiringpi.pinMode(EN, 1)
 
 #функція для щохвилинного проходу
-async def step(min):
-    config_data = load_configuration()
-    steps_per_revolution = config_data.get("steps_per_revolution", 400)
-    period = config_data.get("period", 5)
+def step(min: int):
 
     steps = min * calculator.get_step_per_minute(steps_per_revolution)
-    t = calculator.get_t(steps_per_revolution, period)
     try:
         wiringpi.digitalWrite(DIR, 0)
         for _ in range(int(steps)):
             wiringpi.digitalWrite(STEP, 1)
-            await asyncio.sleep(t)
+            time.sleep(t)
             wiringpi.digitalWrite(STEP, 0)
-            await asyncio.sleep(t)
+            time.sleep(t)
     except asyncio.CancelledError:
         print("Operation cancelled.")
         raise
@@ -52,51 +52,26 @@ async def step(min):
         print("An error occurred:", e)
 
 #функція для ручного калібрування
-async def calibate(steps):
+def calibate(steps: int):
     print("калібрування ручне")
     try:
         if steps > 0:
             wiringpi.digitalWrite(DIR, 0)
             for _ in range(int(steps)):
                 wiringpi.digitalWrite(STEP, 1)
-                await asyncio.sleep(0.01)
+                time.sleep(t)
                 wiringpi.digitalWrite(STEP, 0)
-                await asyncio.sleep(0.01)
+                time.sleep(t)
         elif steps < 0:
             wiringpi.digitalWrite(DIR, 1)
             for _ in range(int(abs(steps))):
                 wiringpi.digitalWrite(STEP, 1)
-                await asyncio.sleep(0.01)
+                time.sleep(t)
                 wiringpi.digitalWrite(STEP, 0)
-                await asyncio.sleep(0.01)
+                time.sleep(t)
     except asyncio.CancelledError:
         print("Operation cancelled.")
         raise
     except Exception as e:
         print("An error occurred:", e)
     print("калібрування ручнe завершено")
-
-#функція для фактичного калібрування
-async def fact_calibate(min):
-    config_data = load_configuration()
-    steps_per_revolution = config_data.get("steps_per_revolution", 400)
-    steps = min * calculator.get_step_per_minute(steps_per_revolution)
-    print("калібрування фактичне")
-    try:
-        if steps > 0:
-            wiringpi.digitalWrite(DIR, 0)
-            for _ in range(int(steps)):
-                wiringpi.digitalWrite(STEP, 1)
-                await asyncio.sleep(0.01)
-                wiringpi.digitalWrite(STEP, 0)
-                await asyncio.sleep(0.01)
-        elif steps < 0:
-            wiringpi.digitalWrite(DIR, 1)
-            for _ in range(int(abs(steps))):
-                wiringpi.digitalWrite(STEP, 1)
-                await asyncio.sleep(0.01)
-                wiringpi.digitalWrite(STEP, 0)
-                await asyncio.sleep(0.01)
-    except Exception as e:
-        print("An error occurred:", e)
-    print("калібрування фактичне завершено")

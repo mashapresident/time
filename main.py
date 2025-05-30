@@ -184,11 +184,9 @@ async def upload_regular_melody():
     return redirect(url_for('main_page'))
 
 
-#КАЛІБРУВАННЯ
 @app.route('/calibrate_fact', methods=['POST'])
 @login_required
 async def calibrate_fact():
-
     try:
         form_data = await request.form
         calibration_time_str = str(form_data['calibration_time'])
@@ -203,23 +201,25 @@ async def calibrate_fact():
         entered_total = entered_hour * 60 + entered_minute
         difference = current_total - entered_total
 
-        await enqueue_task(fact_calibate, difference)
+        await enqueue_task(move_engine.calibate, difference)
         return redirect(url_for('main_page'))
+
     except Exception as e:
         return jsonify({"error": f"Помилка сервера: {e}"}), 500
+
 
 @app.route('/calibrate', methods=['POST'])
 @login_required
 async def calibrate():
-    form_data = await request.form
-    calibration_steps = int(form_data['calibration_steps'])
     try:
+        form_data = await request.form
+        calibration_steps = int(form_data['calibration_steps'])
         await enqueue_task(move_engine.calibate, calibration_steps)
-        print("калібрування на {calibration_steps} кроків")
+        print(f"калібрування на {calibration_steps} кроків")
         return redirect(url_for('main_page'))
-    except:
-        print("не прокалібрувалось")
-
+    except Exception as e:
+        print(f"не прокалібрувалось: {e}")
+        return jsonify({"error": "Помилка під час калібрування"}), 500
 
 
 @app.before_serving
