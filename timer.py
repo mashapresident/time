@@ -30,7 +30,7 @@ def get_current_date() -> str:
 def get_current_time() -> str:
     return datetime.now().strftime("%H:%M")
 
-async def run():
+def run():
     previous_m = -1
     previous_h = -1
     try:
@@ -39,7 +39,7 @@ async def run():
             current_h = get_hour()
 
             if current_m != previous_m:
-                await enqueue_task(move_engine.step, 1)
+                enqueue_task(move_engine.step, 1)
                 print("прохід хвилина")
                 date = get_current_date()
                 day_of_week = get_day_of_week()
@@ -54,7 +54,7 @@ async def run():
 
             previous_m = current_m
             previous_h = current_h
-            await asyncio.sleep(0.5)
+            asyncio.sleep(0.5)
 
     except (KeyboardInterrupt, asyncio.CancelledError):
         print("Програму завершено.")
