@@ -1,13 +1,15 @@
 from multiprocessing import Process, Lock
+import inspect
 import queue
 import asyncio
+from asyncio import QueueEmpty
 global_queue = queue.Queue()
 global_mutex = asyncio.Lock()  # Додаємо м'ютекс
 
 
-def enqueue_task(func, *args, **kwargs):
+async def enqueue_task(func, *args, **kwargs):
     """Додає функцію до черги."""
-    global_queue.put((func, args, kwargs))
+    await global_queue.put((func, args, kwargs))
 
 
 async def process_queue():
@@ -15,7 +17,12 @@ async def process_queue():
     while True:
         try:
             func, args, kwargs = global_queue.get_nowait()
-            async with global_mutex:  # Використання асинхронного блокування
-                await asyncio.to_thread(func, *args, **kwargs)
-        except queue.Empty:
+
+            async with global_mutex:
+                if inspect.iscoroutinefunction(func):
+                    await func(*args, **kwargs)
+                else:
+                    await asyncio.to_thread(func, *args, **kwargs)
+
+        except QueueEmpty:
             await asyncio.sleep(0.1)
