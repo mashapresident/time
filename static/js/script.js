@@ -22,8 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
       }
     });
-  });
-
+});
 
 //перевірка введених даних та оновлення інтерфейсу
 document.addEventListener("DOMContentLoaded", function () {

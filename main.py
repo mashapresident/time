@@ -224,7 +224,8 @@ async def calibrate():
 async def startup():
     init_db(engine)
     asyncio.create_task(process_queue())
-    await timer_run()
+    asyncio.create_task(timer_run())
+
 @app.after_serving
 async def shutdown():
     print("Shutting down application")
