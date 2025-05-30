@@ -1,7 +1,5 @@
 from datetime import *
 import asyncio
-import time
-from time import sleep
 from datetime import date
 import move_engine
 import player
@@ -32,7 +30,7 @@ def get_current_date() -> str:
 def get_current_time() -> str:
     return datetime.now().strftime("%H:%M")
 
-def run():
+async def run():
     previous_m = -1
     previous_h = -1
     try:
@@ -41,7 +39,7 @@ def run():
             current_h = get_hour()
 
             if current_m != previous_m:
-                enqueue_task(move_engine.step, 1)
+                await enqueue_task(move_engine.step, 1)
                 print("прохід хвилина")
                 date = get_current_date()
                 day_of_week = get_day_of_week()
@@ -56,7 +54,7 @@ def run():
 
             previous_m = current_m
             previous_h = current_h
-            time.sleep(0.5)
+            await asyncio.sleep(0.5)
 
     except (KeyboardInterrupt, asyncio.CancelledError):
         print("Програму завершено.")
