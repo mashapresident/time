@@ -170,13 +170,13 @@ async def upload_regular_melody():
     knock_file = files['knock']
 
     if melody_file:
-        await melody_file.save(os.path.join(REGULAR_MUSIC_FOLDER, "melody.mp3"))
+        melody_file.save(os.path.join(REGULAR_MUSIC_FOLDER, "melody.mp3"))
         print("melody file uploaded")
     else:
         print("no melody file")
 
     if knock_file:
-        await knock_file.save(os.path.join(REGULAR_MUSIC_FOLDER, "knock.mp3"))
+        knock_file.save(os.path.join(REGULAR_MUSIC_FOLDER, "knock.mp3"))
         print("knock file uploaded")
     else:
         print("no knock file")
