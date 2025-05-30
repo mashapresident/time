@@ -1,5 +1,7 @@
 from datetime import *
 import asyncio
+import time
+from time import sleep
 from datetime import date
 import move_engine
 import player
@@ -54,7 +56,7 @@ def run():
 
             previous_m = current_m
             previous_h = current_h
-            asyncio.sleep(0.5)
+            time.sleep(0.5)
 
     except (KeyboardInterrupt, asyncio.CancelledError):
         print("Програму завершено.")
