@@ -203,7 +203,7 @@ async def calibrate_fact():
         entered_total = entered_hour * 60 + entered_minute
         difference = current_total - entered_total
 
-        enqueue_task(fact_calibate, difference)
+        await enqueue_task(fact_calibate, difference)
         return redirect(url_for('main_page'))
     except Exception as e:
         return jsonify({"error": f"Помилка сервера: {e}"}), 500
@@ -214,7 +214,7 @@ async def calibrate():
     form_data = await request.form
     calibration_steps = int(form_data['calibration_steps'])
     try:
-        enqueue_task(move_engine.calibate, calibration_steps)
+        await enqueue_task(move_engine.calibate, calibration_steps)
         print("калібрування на {calibration_steps} кроків")
         return redirect(url_for('main_page'))
     except:
