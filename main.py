@@ -140,7 +140,7 @@ async def save_event():
         return "Помилка: файл не був завантажений", 400
 
     filename = secure_filename(audio.filename)
-    await audio.save(os.path.join(UPLOAD_FOLDER, filename))
+    audio.save(os.path.join(UPLOAD_FOLDER, filename))
     new_event = {
         "date": date,
         "priority": priority,
