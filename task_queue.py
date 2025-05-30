@@ -15,9 +15,13 @@ async def enqueue_task(func, *args, **kwargs):
 async def process_queue():
     while True:
         func, args, kwargs = await global_queue.get()
-        async with global_mutex:
-            if inspect.iscoroutinefunction(func):
-                await func(*args, **kwargs)
-            else:
-                await asyncio.to_thread(func, *args, **kwargs)
-        global_queue.task_done()
+        try:
+            async with global_mutex:
+                if inspect.iscoroutinefunction(func):
+                    await func(*args, **kwargs)
+                else:
+                    await asyncio.to_thread(func, *args, **kwargs)
+        except Exception as e:
+            print(f"[ERROR] Помилка виконання завдання з черги: {e}")
+        finally:
+            global_queue.task_done()
