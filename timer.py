@@ -48,9 +48,9 @@ async def run():
                 filename, knock_after = get_filename(date, day_of_week, time)
 
                 if filename:
-                    await player.play_melody(filename, knock_after, int(current_h % 12))
+                    asyncio.create_task(player.play_melody(filename, knock_after, int(current_h % 12)))
                 elif previous_h != current_h and previous_m == 59:
-                    await player.play_melody("melody.mp3", True, int(current_h % 12))
+                    asyncio.create_task(player.play_melody("melody.mp3", True, int(current_h % 12)))
 
             previous_m = current_m
             previous_h = current_h

@@ -5,10 +5,7 @@ from load_config import UPLOAD_FOLDER, REGULAR_MUSIC_FOLDER
 
 async def play_melody(filename: str, knock: bool, hour: int):
     filepath = os.path.join(UPLOAD_FOLDER, filename)
-    instance = vlc.Instance()
-    if instance is None:
-        raise RuntimeError("VLC не ініціалізувався. Перевір, чи встановлено VLC/libvlc.")
-
+    instance = vlc.Instance('--aout=alsa') 
     player = instance.media_player_new()
     media = instance.media_new(filepath)
     player.set_media(media)
@@ -21,6 +18,7 @@ async def play_melody(filename: str, knock: bool, hour: int):
 
     if knock:
         await play_knock(hour)
+
 
 async def play_knock(hour: int):
     for i in range(hour):
