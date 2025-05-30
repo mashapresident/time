@@ -3,7 +3,7 @@ import inspect
 import queue
 import asyncio
 from asyncio import QueueEmpty
-global_queue = queue.Queue()
+global_queue = asyncio.Queue()
 global_mutex = asyncio.Lock()  # Додаємо м'ютекс
 
 
