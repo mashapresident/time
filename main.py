@@ -15,8 +15,6 @@ from task_queue import *
 app = Quart(__name__)
 app.secret_key = "kpi_clock"
 
-
-
 def login_required(f):
     @wraps(f)
     async def decorated_function(*args, **kwargs):
@@ -102,7 +100,7 @@ async def set_steps():
 async def set_period():
     form_data = await request.form
     try:
-        new_steps = int(form_data['period_per_revolution'])
+        new_steps = float(form_data['period_per_revolution'])
     except ValueError:
         return "Invalid input", 400
     # Оновлюємо глобальну змінну та конфігураційний файл
@@ -135,7 +133,7 @@ async def save_event():
     knock_after = 'knock' in form
 
     files = await request.files
-    audio = files.get('melody')
+    audio = files['melody']
     if not audio:
         return "Помилка: файл не був завантажений", 400
 
@@ -230,13 +228,3 @@ async def startup():
 @app.after_serving
 async def shutdown():
     print("Shutting down application")
-
-
-
-if __name__ == '__main__':
-    from hypercorn.config import Config
-    import hypercorn.asyncio
-
-    config = Config()
-    config.bind = ["10.1.1.250:5000"]
-    asyncio.run(hypercorn.asyncio.serve(app, config))
