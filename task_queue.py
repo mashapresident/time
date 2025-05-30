@@ -13,16 +13,11 @@ async def enqueue_task(func, *args, **kwargs):
 
 
 async def process_queue():
-    """Обробляє завдання з черги в порядку їх надходження."""
     while True:
-        try:
-            func, args, kwargs = global_queue.get_nowait()
-
-            async with global_mutex:
-                if inspect.iscoroutinefunction(func):
-                    await func(*args, **kwargs)
-                else:
-                    await asyncio.to_thread(func, *args, **kwargs)
-
-        except QueueEmpty:
-            await asyncio.sleep(0.1)
+        func, args, kwargs = await global_queue.get()
+        async with global_mutex:
+            if inspect.iscoroutinefunction(func):
+                await func(*args, **kwargs)
+            else:
+                await asyncio.to_thread(func, *args, **kwargs)
+        global_queue.task_done()
