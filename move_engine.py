@@ -53,6 +53,7 @@ async def step(min):
 
 #функція для ручного калібрування
 async def calibate(steps):
+    print("калібрування ручне")
     try:
         if steps > 0:
             wiringpi.digitalWrite(DIR, 0)
@@ -76,6 +77,7 @@ async def calibate(steps):
 
 #функція для фактичного калібрування
 async def fact_calibate(min):
+
     """
     Асинхронна функція для керування кроками двигуна.
     Блокуючі виклики time.sleep() замінено на await asyncio.sleep().
@@ -84,6 +86,7 @@ async def fact_calibate(min):
     steps_per_revolution = config_data.get("steps_per_revolution", 400)
 
     steps = min * calculator.get_step_per_minute(steps_per_revolution)
+    print("калібрування фактичне")
     try:
         if steps > 0:
             wiringpi.digitalWrite(DIR, 0)

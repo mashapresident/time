@@ -40,6 +40,7 @@ async def run():
 
             if current_m != previous_m:
                 await enqueue_task(move_engine.step, 1)
+                print("прохід хвилина")
                 date = get_current_date()
                 day_of_week = get_day_of_week()
                 time = get_current_time()
