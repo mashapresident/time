@@ -74,17 +74,12 @@ async def calibate(steps):
         raise
     except Exception as e:
         print("An error occurred:", e)
+    print("калібрування ручнe завершено")
 
 #функція для фактичного калібрування
 async def fact_calibate(min):
-
-    """
-    Асинхронна функція для керування кроками двигуна.
-    Блокуючі виклики time.sleep() замінено на await asyncio.sleep().
-    """
     config_data = load_configuration()
     steps_per_revolution = config_data.get("steps_per_revolution", 400)
-
     steps = min * calculator.get_step_per_minute(steps_per_revolution)
     print("калібрування фактичне")
     try:
@@ -104,3 +99,4 @@ async def fact_calibate(min):
                 await asyncio.sleep(0.01)
     except Exception as e:
         print("An error occurred:", e)
+    print("калібрування фактичне завершено")
