@@ -14,15 +14,15 @@ document.addEventListener("DOMContentLoaded", function () {
 //перевірка введених даних
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("set_period").addEventListener("submit", function (event) {
-        let periodInput = document.getElementById("period_per_revolution");
-        let periodValue = parseFloat(periodInput.value);
+      let periodInput = document.getElementById("period_per_revolution");
+      let periodValue = parseFloat(periodInput.value);
 
-        if (isNaN(periodValue) || periodValue <= 0) {
-            alert("Час проходу на хвилину повинен бути додатнім числом!");
-            event.preventDefault();
-        }
+      if (isNaN(periodValue) || periodValue <= 0) {
+        alert("Час проходу на хвилину повинен бути додатнім числом!");
+        event.preventDefault();
+      }
     });
-});
+  });
 
 
 //перевірка введених даних та оновлення інтерфейсу
